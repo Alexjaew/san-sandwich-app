@@ -514,39 +514,91 @@
   // 2. Set the SAME value here as the "API_TOKEN" Script Property in Apps Script
   //    (Project Settings > Script Properties). This is what keeps random people
   //    from hitting your API and editing your shop's data.
-  const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbx6kmtOesR4Ij6Tisf5U03aFzQ_AQe9TtEBNiQiWNkzhKBo-wgZOTrp0MqSLFRSzzbD/exec';
-  const API_TOKEN = '0925452204Ing';
+  const API_BASE_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE/exec';
+  const API_TOKEN = 'PASTE_YOUR_SHARED_SECRET_HERE';
+
+  // Apps Script Web Apps don't reliably send the CORS headers a normal
+  // fetch() needs — even with "Anyone" access set correctly, browsers block
+  // reading the response. So reads go through JSONP (a <script> tag, which
+  // isn't subject to CORS) and writes go through a hidden iframe form
+  // submission (also not subject to CORS). Neither technique touches fetch().
+
+  let jsonpCounter_ = 0;
 
   // GET request for read-only actions (getAllData, getDailyLogs, getMenuItems)
   function apiGet(action, extraParams){
-    const params = Object.assign({ action: action, token: API_TOKEN }, extraParams || {});
-    const qs = Object.keys(params)
-      .map(function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]); })
-      .join('&');
-    return fetch(API_BASE_URL + '?' + qs)
-      .then(function(res){ return res.json(); })
-      .then(function(json){
-        if (!json.success) throw new Error(json.error || 'เกิดข้อผิดพลาด');
-        return json.data;
-      });
+    return new Promise(function(resolve, reject){
+      const callbackName = 'apiJsonpCallback_' + (jsonpCounter_++) + '_' + Date.now();
+      const params = Object.assign({ action: action, token: API_TOKEN, callback: callbackName }, extraParams || {});
+      const qs = Object.keys(params)
+        .map(function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]); })
+        .join('&');
+
+      const script = document.createElement('script');
+      let settled = false;
+
+      function cleanup(){
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+      }
+
+      window[callbackName] = function(json){
+        settled = true;
+        cleanup();
+        if (!json.success) reject(new Error(json.error || 'เกิดข้อผิดพลาด'));
+        else resolve(json.data);
+      };
+
+      script.onerror = function(){
+        if (settled) return;
+        cleanup();
+        reject(new Error('เชื่อมต่อ API ไม่สำเร็จ (เช็ค API_BASE_URL ว่าใส่ถูกไหม)'));
+      };
+
+      script.src = API_BASE_URL + '?' + qs;
+      document.body.appendChild(script);
+    });
   }
 
-  // POST request for write actions. Content-Type is deliberately text/plain
-  // (not application/json) so the browser treats this as a "simple request"
-  // and skips the CORS preflight — Apps Script Web Apps can't handle that
-  // preflight (OPTIONS) request, so JSON content-type would just fail silently.
+  // POST request for write actions, sent via a hidden iframe form submit.
+  // Apps Script reads the JSON from the field NAME (the whole payload is put
+  // there, with an empty value) — enctype="text/plain" sends that as
+  // "<json>=" verbatim, and Code.gs strips the trailing "=" before parsing.
+  // We can't read the cross-origin iframe's response, so this resolves
+  // optimistically after a short delay; real errors surface on the next
+  // data reload (which every call site already does).
   function apiPost(action, payload){
-    const body = Object.assign({ action: action, token: API_TOKEN }, payload || {});
-    return fetch(API_BASE_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-      body: JSON.stringify(body)
-    })
-      .then(function(res){ return res.json(); })
-      .then(function(json){
-        if (!json.success) throw new Error(json.error || 'เกิดข้อผิดพลาด');
-        return json.data;
-      });
+    return new Promise(function(resolve){
+      const body = Object.assign({ action: action, token: API_TOKEN }, payload || {});
+      const json = JSON.stringify(body);
+
+      let iframe = document.getElementById('apiPostFrame');
+      if (!iframe){
+        iframe = document.createElement('iframe');
+        iframe.name = 'apiPostFrame';
+        iframe.id = 'apiPostFrame';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+      }
+
+      const form = document.createElement('form');
+      form.method = 'POST';
+      form.action = API_BASE_URL;
+      form.target = 'apiPostFrame';
+      form.enctype = 'text/plain';
+
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = json; // the entire JSON payload, used as the field NAME
+      input.value = '';
+      form.appendChild(input);
+
+      document.body.appendChild(form);
+      form.submit();
+      document.body.removeChild(form);
+
+      setTimeout(resolve, 500); // give Apps Script time to finish processing
+    });
   }
 
   let currentType = 'รายรับ';
@@ -1153,21 +1205,25 @@
     const input = document.getElementById('menuNewName');
     const name = input.value.trim();
     if (!name) return;
-    apiPost('addMenuItem', { name: name }).then(function(items){
+    const quantitiesBefore = getMenuQuantities();
+    apiPost('addMenuItem', { name: name }).then(function(){
+      return apiGet('getMenuItems');
+    }).then(function(items){
       cachedMenuItems = items;
-      const quantities = getMenuQuantities();
-      renderMenuItemList(quantities);
+      renderMenuItemList(quantitiesBefore);
       input.value = '';
     }).catch(function(err){ alert('เพิ่มเมนูไม่สำเร็จ: ' + err.message); });
   }
 
   function removeMenuItemUI(name){
     if (!confirm('ลบเมนู "' + name + '" ออกจากรายการหรือไม่? (จะลบเฉพาะรายชื่อเมนู ไม่กระทบข้อมูลที่บันทึกไว้แล้ว)')) return;
-    apiPost('deleteMenuItem', { name: name }).then(function(items){
+    const quantitiesBefore = getMenuQuantities();
+    delete quantitiesBefore[name];
+    apiPost('deleteMenuItem', { name: name }).then(function(){
+      return apiGet('getMenuItems');
+    }).then(function(items){
       cachedMenuItems = items;
-      const quantities = getMenuQuantities();
-      delete quantities[name];
-      renderMenuItemList(quantities);
+      renderMenuItemList(quantitiesBefore);
       sumMenuQuantitiesIntoMade();
     }).catch(function(err){ alert('ลบเมนูไม่สำเร็จ: ' + err.message); });
   }
