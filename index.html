@@ -514,8 +514,8 @@
   // 2. Set the SAME value here as the "API_TOKEN" Script Property in Apps Script
   //    (Project Settings > Script Properties). This is what keeps random people
   //    from hitting your API and editing your shop's data.
-  const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbx6kmtOesR4Ij6Tisf5U03aFzQ_AQe9TtEBNiQiWNkzhKBo-wgZOTrp0MqSLFRSzzbD/exec';
-  const API_TOKEN = '0925452204Ing';
+  const API_BASE_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE/exec';
+  const API_TOKEN = 'PASTE_YOUR_SHARED_SECRET_HERE';
 
   // Apps Script Web Apps don't reliably send the CORS headers a normal
   // fetch() needs — even with "Anyone" access set correctly, browsers block
@@ -586,6 +586,7 @@
       form.action = API_BASE_URL;
       form.target = 'apiPostFrame';
       form.enctype = 'text/plain';
+      form.style.display = 'none';
 
       const input = document.createElement('input');
       input.type = 'hidden';
@@ -595,9 +596,14 @@
 
       document.body.appendChild(form);
       form.submit();
-      document.body.removeChild(form);
 
-      setTimeout(resolve, 500); // give Apps Script time to finish processing
+      // Removing the form right after submit() can cancel the request in
+      // some browsers — wait until the submission has actually gone out
+      // before cleaning it up.
+      setTimeout(function(){
+        if (form.parentNode) form.parentNode.removeChild(form);
+        resolve();
+      }, 600);
     });
   }
 
