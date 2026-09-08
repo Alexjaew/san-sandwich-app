@@ -287,7 +287,7 @@
 
   #menuItemList{ margin-bottom:8px; }
   .menu-row{
-    padding:8px 0;
+    padding:6px 0;
     border-bottom:1px solid var(--line);
   }
   .menu-row:last-child{ border-bottom:none; }
@@ -295,21 +295,21 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
-    margin-bottom:6px;
+    margin-bottom:4px;
   }
-  .menu-row-name{ font-size:0.88rem; font-weight:600; }
+  .menu-row-name{ font-size:0.85rem; font-weight:600; }
   .menu-row-sizes{
     display:flex;
-    gap:10px;
+    gap:14px;
   }
   .menu-size-group{
     flex:1;
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     align-items:center;
-    gap:3px;
+    gap:6px;
   }
-  .menu-size-label{ font-size:0.7rem; color:var(--ink-soft); }
+  .menu-size-label{ font-size:0.72rem; color:var(--ink-soft); min-width:26px; }
   .menu-stepper{
     display:flex;
     align-items:center;
@@ -317,12 +317,13 @@
     flex-shrink:0;
   }
   .menu-stepper input[type="number"]{
-    width:36px;
+    width:28px;
     text-align:center;
-    padding:6px 2px;
+    padding:3px 2px;
     border-left:none;
     border-right:none;
     border-radius:0;
+    font-size:0.85rem;
     -moz-appearance:textfield;
   }
   .menu-stepper input[type="number"]::-webkit-inner-spin-button,
@@ -331,18 +332,18 @@
     margin:0;
   }
   .stepper-btn{
-    width:28px;
-    height:32px;
+    width:22px;
+    height:24px;
     border:1px solid var(--line);
     background:var(--cream);
     color:var(--crust-dark);
-    font-size:1.05rem;
+    font-size:0.9rem;
     font-weight:700;
     cursor:pointer;
     line-height:1;
   }
-  .stepper-btn:first-child{ border-radius:8px 0 0 8px; }
-  .stepper-btn:last-child{ border-radius:0 8px 8px 0; }
+  .stepper-btn:first-child{ border-radius:6px 0 0 6px; }
+  .stepper-btn:last-child{ border-radius:0 6px 6px 0; }
   .stepper-btn:active{ background:var(--line); }
   .menu-row-del{
     border:none; background:none; color:var(--ink-soft);
@@ -514,8 +515,8 @@
   // 2. Set the SAME value here as the "API_TOKEN" Script Property in Apps Script
   //    (Project Settings > Script Properties). This is what keeps random people
   //    from hitting your API and editing your shop's data.
-  const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbx6kmtOesR4Ij6Tisf5U03aFzQ_AQe9TtEBNiQiWNkzhKBo-wgZOTrp0MqSLFRSzzbD/exec';
-  const API_TOKEN = '0925452204Ing';
+  const API_BASE_URL = 'PASTE_YOUR_APPS_SCRIPT_WEB_APP_URL_HERE/exec';
+  const API_TOKEN = 'PASTE_YOUR_SHARED_SECRET_HERE';
 
   // Apps Script Web Apps don't work reliably here with either kind of POST:
   // fetch()-based POST gets blocked because Apps Script doesn't send the
