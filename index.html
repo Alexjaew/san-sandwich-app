@@ -517,15 +517,16 @@
   const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbx6kmtOesR4Ij6Tisf5U03aFzQ_AQe9TtEBNiQiWNkzhKBo-wgZOTrp0MqSLFRSzzbD/exec';
   const API_TOKEN = '0925452204Ing';
 
-  // Apps Script Web Apps don't reliably send the CORS headers a normal
-  // fetch() needs — even with "Anyone" access set correctly, browsers block
-  // reading the response. So reads go through JSONP (a <script> tag, which
-  // isn't subject to CORS) and writes go through a hidden iframe form
-  // submission (also not subject to CORS). Neither technique touches fetch().
+  // Apps Script Web Apps don't work reliably here with either kind of POST:
+  // fetch()-based POST gets blocked because Apps Script doesn't send the
+  // CORS headers fetch() requires, and a hidden-iframe-form POST (the usual
+  // workaround) gets blocked with a 403 from Google. A <script src="..."> tag
+  // (JSONP) isn't subject to CORS at all and is the one approach that's
+  // actually reliable — so everything, reads AND writes, goes through GET.
 
   let jsonpCounter_ = 0;
 
-  // GET request for read-only actions (getAllData, getDailyLogs, getMenuItems)
+  // Core request function — every API call (read or write) goes through this.
   function apiGet(action, extraParams){
     return new Promise(function(resolve, reject){
       const callbackName = 'apiJsonpCallback_' + (jsonpCounter_++) + '_' + Date.now();
@@ -560,51 +561,30 @@
     });
   }
 
-  // POST request for write actions, sent via a hidden iframe form submit.
-  // Apps Script reads the JSON from the field NAME (the whole payload is put
-  // there, with an empty value) — enctype="text/plain" sends that as
-  // "<json>=" verbatim, and Code.gs strips the trailing "=" before parsing.
-  // We can't read the cross-origin iframe's response, so this resolves
-  // optimistically after a short delay; real errors surface on the next
-  // data reload (which every call site already does).
+  // Write actions (add/update/delete) also go through apiGet — the payload
+  // object just gets JSON-stringified into a "data" query param instead of
+  // a POST body. URLs have a practical length limit, so if a receipt photo
+  // would push the request over a safe size, it's dropped (with a heads-up)
+  // rather than silently failing the whole save.
   function apiPost(action, payload){
-    return new Promise(function(resolve){
-      const body = Object.assign({ action: action, token: API_TOKEN }, payload || {});
-      const json = JSON.stringify(body);
+    payload = payload || {};
+    const params = {};
+    if (payload.rowIndex !== undefined) params.rowIndex = payload.rowIndex;
+    if (payload.name !== undefined) params.name = payload.name;
 
-      let iframe = document.getElementById('apiPostFrame');
-      if (!iframe){
-        iframe = document.createElement('iframe');
-        iframe.name = 'apiPostFrame';
-        iframe.id = 'apiPostFrame';
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
+    if (payload.data !== undefined){
+      let dataToSend = payload.data;
+      let dataJson = JSON.stringify(dataToSend);
+      if (dataJson.length > 6000 && dataToSend && dataToSend.receipt){
+        const stripped = Object.assign({}, dataToSend);
+        delete stripped.receipt;
+        dataJson = JSON.stringify(stripped);
+        alert('ไฟล์รูปบิลใหญ่เกินไปสำหรับการเชื่อมต่อแบบนี้ บันทึกรายการให้แล้วแต่ไม่ได้แนบรูป ลองใช้รูปที่มีขนาดเล็กลงครับ');
       }
+      params.data = dataJson;
+    }
 
-      const form = document.createElement('form');
-      form.method = 'POST';
-      form.action = API_BASE_URL;
-      form.target = 'apiPostFrame';
-      form.enctype = 'text/plain';
-      form.style.display = 'none';
-
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = json; // the entire JSON payload, used as the field NAME
-      input.value = '';
-      form.appendChild(input);
-
-      document.body.appendChild(form);
-      form.submit();
-
-      // Removing the form right after submit() can cancel the request in
-      // some browsers — wait until the submission has actually gone out
-      // before cleaning it up.
-      setTimeout(function(){
-        if (form.parentNode) form.parentNode.removeChild(form);
-        resolve();
-      }, 600);
-    });
+    return apiGet(action, params);
   }
 
   let currentType = 'รายรับ';
@@ -1212,9 +1192,7 @@
     const name = input.value.trim();
     if (!name) return;
     const quantitiesBefore = getMenuQuantities();
-    apiPost('addMenuItem', { name: name }).then(function(){
-      return apiGet('getMenuItems');
-    }).then(function(items){
+    apiPost('addMenuItem', { name: name }).then(function(items){
       cachedMenuItems = items;
       renderMenuItemList(quantitiesBefore);
       input.value = '';
@@ -1225,9 +1203,7 @@
     if (!confirm('ลบเมนู "' + name + '" ออกจากรายการหรือไม่? (จะลบเฉพาะรายชื่อเมนู ไม่กระทบข้อมูลที่บันทึกไว้แล้ว)')) return;
     const quantitiesBefore = getMenuQuantities();
     delete quantitiesBefore[name];
-    apiPost('deleteMenuItem', { name: name }).then(function(){
-      return apiGet('getMenuItems');
-    }).then(function(items){
+    apiPost('deleteMenuItem', { name: name }).then(function(items){
       cachedMenuItems = items;
       renderMenuItemList(quantitiesBefore);
       sumMenuQuantitiesIntoMade();
