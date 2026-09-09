@@ -516,7 +516,7 @@
   //    (Project Settings > Script Properties). This is what keeps random people
   //    from hitting your API and editing your shop's data.
   const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbx6kmtOesR4Ij6Tisf5U03aFzQ_AQe9TtEBNiQiWNkzhKBo-wgZOTrp0MqSLFRSzzbD/exec';
-  const API_TOKEN = '0925452204Ing';
+  const API_TOKEN = '0925452204';
 
   // Apps Script Web Apps don't work reliably here with either kind of POST:
   // fetch()-based POST gets blocked because Apps Script doesn't send the
@@ -596,6 +596,7 @@
   let removeReceiptFlag = false;  // true if user removed the existing receipt
 
   let currentTab = 'finance';
+  let financeDataStale = false; // set true when daily-log actions change finance data behind the scenes
   let cachedDailyLogs = null;
   let editingDailyLogRowIndex = null;
   let cachedMenuItems = [];
@@ -963,6 +964,7 @@
     document.getElementById('financeView').style.display = (tab === 'finance') ? 'block' : 'none';
     document.getElementById('dailyLogView').style.display = (tab === 'dailylog') ? 'block' : 'none';
     if (tab === 'dailylog' && cachedDailyLogs === null) loadDailyLogs();
+    if (tab === 'finance' && financeDataStale) { financeDataStale = false; loadData(); }
     try { localStorage.setItem('sanSandwichTab', tab); } catch (e) {}
   }
 
@@ -1230,7 +1232,7 @@
     apiPost('saveDailyLog', { data: data }).then(function(){
       cancelDailyLogEdit();
       loadDailyLogs();
-      loadData(); // refresh รายรับ-รายจ่าย too, since this syncs a "ขายได้" transaction
+      financeDataStale = true; // refreshes next time the รายรับ-รายจ่าย tab is opened, instead of right now
     }).catch(onDailyLogError);
   }
 
@@ -1277,7 +1279,7 @@
     if (!confirm('ลบบันทึกนี้?')) return;
     apiPost('deleteDailyLog', { rowIndex: rowIndex }).then(function(){
       loadDailyLogs();
-      loadData();
+      financeDataStale = true;
     }).catch(onDailyLogError);
   }
 
