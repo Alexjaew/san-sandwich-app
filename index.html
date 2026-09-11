@@ -971,8 +971,10 @@
   // ===== Daily log (บันทึกประจำวัน) =====
   function loadDailyLogs(){
     document.getElementById('dlDate').value = todayStr();
-    apiGet('getDailyLogs').then(renderDailyLogs).catch(onDailyLogError);
-    loadMenuItems();
+    apiGet('getDailyLogs').then(function(logs){
+      renderDailyLogs(logs);
+      return loadMenuItems(); // sequenced after, not fired at the same time
+    }).catch(onDailyLogError);
   }
 
   function onDailyLogError(err){
@@ -1299,13 +1301,21 @@
     if (arrow) arrow.classList.add('open');
   }
 
-  // restore whichever tab was open before the page was refreshed
+  // restore whichever tab was open before the page was refreshed —
+  // load only that tab's data at startup, not both at once (firing two
+  // Apps Script requests simultaneously was causing loads to fail/drop)
   try {
     const savedTab = localStorage.getItem('sanSandwichTab');
-    if (savedTab === 'dailylog') switchTab('dailylog');
-  } catch (e) {}
-
-  loadData();
+    if (savedTab === 'dailylog') {
+      switchTab('dailylog');   // loads daily logs now
+      financeDataStale = true; // รายรับ-รายจ่าย loads only once that tab is opened
+      document.getElementById('fDate').value = todayStr(); // still init this field even though loadData() is deferred
+    } else {
+      loadData();
+    }
+  } catch (e) {
+    loadData(); // fallback if localStorage isn't available for some reason
+  }
 </script>
 </body>
 </html>
