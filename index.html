@@ -2,2987 +2,1320 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="theme-color" id="themeColorMeta" content="#FAF8F4">
-<title>My Port — Portfolio Tracker</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="preconnect" href="https://script.google.com">
-<link rel="preconnect" href="https://script.googleusercontent.com">
-<link rel="preconnect" href="https://eodhd.com">
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
-<!-- โหลด CSS ไอคอนแบบ non-blocking: หน้าเว็บไม่ต้องรอไฟล์นี้โหลดเสร็จก่อนแสดงผล (สำคัญมากบนเน็ตมือถือที่ช้า) -->
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css"></noscript>
-<!-- ย้าย Chart.js มาไว้ที่นี่และเพิ่ม defer เพื่อโหลดขนานตั้งแต่เริ่มแรก ลดเวลาบล็อกเรนเดอร์หน้าจอ -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js" defer></script>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>San SandWich - รายรับรายจ่าย</title>
 <style>
-  :root {
-    --ink: #0E1116;
-    --ink-soft: #4A5160;
-    --paper: #FAF8F4;
-    --paper-raised: #FFFFFF;
-    --line: #E4E0D8;
-    --gain: #1B7A4D;
-    --gain-soft: #E6F4EC;
-    --loss: #B23B2E;
-    --loss-soft: #FBEAE7;
-    --accent: #C98A2C;
-    --accent-soft: #F6ECD9;
-    --accent-text: #7A5414;
-    --accent-border: #E5C98A;
-    --accent-dark: #0E1116;
-    --accent-dark-text: #FAF8F4;
-    --info: #2E6DA4;
-    --info-soft: #E8F1FA;
-    --info-border: #BFDCF2;
-    --info-text: #1F4E75;
-    --hero-bg: var(--paper-raised);
-    --hero-text: var(--ink);
-    --hero-text-dim: var(--ink-soft);
-    --hero-border: var(--line);
-    --hero-chip-bg: rgba(14,17,22,0.05);
-    --hero-chip-border: rgba(14,17,22,0.08);
-    --hero-chip-active-bg: var(--ink);
-    --hero-chip-active-text: var(--paper-raised);
-    --hero-gain-text: var(--gain);
-    --hero-loss-text: var(--loss);
-    --hero-gain-bg: var(--gain-soft);
-    --hero-loss-bg: var(--loss-soft);
-    --skel-shine: #ECE8DE;
-    --mono: 'JetBrains Mono', 'SF Mono', 'IBM Plex Mono', ui-monospace, monospace;
-    --serif: 'Fraunces', 'Source Serif Pro', 'Iowan Old Style', Georgia, serif;
-    --sans: 'Inter', -apple-system, system-ui, sans-serif;
-    --shadow-sm: 0 1px 2px rgba(14,17,22,0.04), 0 1px 1px rgba(14,17,22,0.03);
-    --shadow-md: 0 8px 24px -8px rgba(14,17,22,0.12), 0 2px 6px -2px rgba(14,17,22,0.06);
-    --shadow-lg: 0 20px 48px -12px rgba(14,17,22,0.22), 0 6px 16px -6px rgba(14,17,22,0.1);
-    --radius-sm: 12px;
-    --radius-md: 16px;
-    --radius-lg: 22px;
+  :root{
+    --crust:#C98A3E;
+    --crust-dark:#9C6428;
+    --lettuce:#5C8A4A;
+    --tomato:#C2452F;
+    --cream:#FBF4E8;
+    --ink:#2E2418;
+    --ink-soft:#6B5D4B;
+    --card:#ffffff;
+    --line:#EAE0CC;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:'Segoe UI', 'Noto Sans Thai', -apple-system, sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    padding-bottom:40px;
+  }
+  .stripe{
+    height:6px;
+    background:linear-gradient(90deg,
+      var(--crust) 0 20%,
+      var(--lettuce) 20% 40%,
+      var(--tomato) 40% 60%,
+      var(--crust-dark) 60% 80%,
+      var(--lettuce) 80% 100%);
+  }
+  header{
+    padding:20px 18px 10px;
+  }
+  header h1{
+    font-size:1.3rem;
+    margin:0 0 2px;
+    letter-spacing:-0.01em;
+  }
+  header p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:0.85rem;
+  }
+  .wrap{ padding:0 16px; max-width:520px; margin:0 auto; }
+
+  .hero{
+    background:var(--ink);
+    color:var(--cream);
+    border-radius:18px;
+    padding:22px 20px;
+    margin:14px 0;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute; left:0; right:0; bottom:0; height:5px;
+    background:linear-gradient(90deg,var(--crust),var(--lettuce),var(--tomato));
+  }
+  .hero .label{ font-size:0.78rem; opacity:0.7; letter-spacing:0.03em; }
+  .hero .value{ font-size:2.1rem; font-weight:700; margin:4px 0 14px; }
+  .hero .value.neg{ color:#E8907C; }
+  .hero .value.pos{ color:#9FCB86; }
+  .hero .sub{ display:flex; gap:22px; font-size:0.82rem; }
+  .hero .sub b{ display:block; font-size:1rem; font-weight:600; }
+  .sub .inc b{ color:#9FCB86; }
+  .sub .exp b{ color:#E8907C; }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px;
+    margin-bottom:14px;
+  }
+  .card h2{
+    font-size:0.95rem;
+    margin:0 0 12px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .card h2::before{
+    content:"";
+    width:8px;height:8px;border-radius:50%;
+    background:var(--crust);
   }
 
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --ink: #ECE9E2;
-      --ink-soft: #8B92A0;
-      --paper: #121316;
-      --paper-raised: #1C1E23;
-      --line: #2A2D33;
-      --gain: #3DBE7C;
-      --gain-soft: #16291E;
-      --loss: #E8645A;
-      --loss-soft: #2E1916;
-      --accent: #D9A655;
-      --accent-soft: #2B2316;
-      --accent-text: #E0C088;
-      --accent-border: #4A3D24;
-      --skel-shine: #2A2D33;
-      --info: #5FA8E0;
-      --info-soft: #132433;
-      --info-border: #2C4A63;
-      --info-text: #8FC4EE;
-      --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
-      --shadow-md: 0 8px 24px -8px rgba(0,0,0,0.45), 0 2px 6px -2px rgba(0,0,0,0.3);
-      --shadow-lg: 0 24px 56px -16px rgba(0,0,0,0.6), 0 8px 20px -8px rgba(0,0,0,0.4);
-      --hero-bg: var(--accent-dark);
-      --hero-text: var(--accent-dark-text);
-      --hero-text-dim: rgba(250,248,244,0.55);
-      --hero-border: rgba(250,248,244,0.1);
-      --hero-chip-bg: rgba(250,248,244,0.1);
-      --hero-chip-border: rgba(250,248,244,0.08);
-      --hero-chip-active-bg: var(--accent-dark-text);
-      --hero-chip-active-text: var(--accent-dark);
-      --hero-gain-text: #7CDDA8;
-      --hero-loss-text: #F1A89E;
-      --hero-gain-bg: rgba(60,190,120,0.2);
-      --hero-loss-bg: rgba(232,100,90,0.2);
-    }
+  .toggle{
+    display:flex;
+    background:var(--cream);
+    border-radius:10px;
+    padding:4px;
+    margin-bottom:12px;
   }
-  :root[data-theme="dark"] {
-    --ink: #ECE9E2;
-    --ink-soft: #8B92A0;
-    --paper: #121316;
-    --paper-raised: #1C1E23;
-    --line: #2A2D33;
-    --gain: #3DBE7C;
-    --gain-soft: #16291E;
-    --loss: #E8645A;
-    --loss-soft: #2E1916;
-    --accent: #D9A655;
-    --accent-soft: #2B2316;
-    --accent-text: #E0C088;
-    --accent-border: #4A3D24;
-    --skel-shine: #2A2D33;
-    --info: #5FA8E0;
-    --info-soft: #132433;
-    --info-border: #2C4A63;
-    --info-text: #8FC4EE;
-    --hero-bg: var(--accent-dark);
-    --hero-text: var(--accent-dark-text);
-    --hero-text-dim: rgba(250,248,244,0.55);
-    --hero-border: rgba(250,248,244,0.1);
-    --hero-chip-bg: rgba(250,248,244,0.1);
-    --hero-chip-border: rgba(250,248,244,0.08);
-    --hero-chip-active-bg: var(--accent-dark-text);
-    --hero-chip-active-text: var(--accent-dark);
-    --hero-gain-text: #7CDDA8;
-    --hero-loss-text: #F1A89E;
-    --hero-gain-bg: rgba(60,190,120,0.2);
-    --hero-loss-bg: rgba(232,100,90,0.2);
-    --shadow-sm: 0 1px 2px rgba(0,0,0,0.2);
-    --shadow-md: 0 8px 24px -8px rgba(0,0,0,0.45), 0 2px 6px -2px rgba(0,0,0,0.3);
-    --shadow-lg: 0 24px 56px -16px rgba(0,0,0,0.6), 0 8px 20px -8px rgba(0,0,0,0.4);
+  .toggle button{
+    flex:1;
+    border:none;
+    background:transparent;
+    padding:9px 0;
+    border-radius:7px;
+    font-size:0.88rem;
+    font-weight:600;
+    color:var(--ink-soft);
+    cursor:pointer;
+  }
+  .toggle button.active.income{ background:var(--lettuce); color:#fff; }
+  .toggle button.active.expense{ background:var(--tomato); color:#fff; }
+  .toggle button.active.neutral{ background:var(--crust-dark); color:#fff; }
+
+  label{
+    display:block;
+    font-size:0.78rem;
+    color:var(--ink-soft);
+    margin:10px 0 4px;
+  }
+  input, select{
+    width:100%;
+    padding:10px 12px;
+    border:1px solid var(--line);
+    border-radius:9px;
+    font-size:0.95rem;
+    background:#fff;
+    color:var(--ink);
+    font-family:inherit;
+  }
+  .submit-btn{
+    width:100%;
+    margin-top:16px;
+    padding:12px;
+    border:none;
+    border-radius:10px;
+    background:var(--crust-dark);
+    color:#fff;
+    font-size:0.95rem;
+    font-weight:600;
+    cursor:pointer;
+  }
+  .submit-btn:active{ opacity:0.85; }
+  .cancel-btn{
+    width:100%;
+    margin-top:8px;
+    padding:10px;
+    border:1px solid var(--line);
+    border-radius:10px;
+    background:transparent;
+    color:var(--ink-soft);
+    font-size:0.88rem;
+    cursor:pointer;
   }
 
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-  html, body {
-    margin: 0; padding: 0;
-    background: var(--paper);
-    color: var(--ink);
-    font-family: var(--sans);
-    -webkit-font-smoothing: antialiased;
+  #receiptPreview{
+    margin-top:8px;
+    padding:8px 10px;
+    background:var(--cream);
+    border-radius:8px;
+    font-size:0.8rem;
+    color:var(--ink-soft);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:8px;
   }
-  body {
-    padding-bottom: 90px;
-    min-height: 100vh;
+  #receiptPreview a{ color:var(--crust-dark); text-decoration:none; font-weight:600; }
+  #receiptPreview button{
+    border:none; background:none; color:var(--tomato);
+    font-size:0.78rem; cursor:pointer; white-space:nowrap;
   }
-
-  .topbar {
-    position: sticky; top: 0; z-index: 20;
-    background: color-mix(in srgb, var(--paper) 92%, transparent);
-    -webkit-backdrop-filter: saturate(180%) blur(14px);
-    backdrop-filter: saturate(180%) blur(14px);
-    border-bottom: 1px solid var(--line);
-    padding: max(16px, env(safe-area-inset-top)) 20px 12px;
-  }
-  .topbar-row {
-    display: flex; align-items: baseline; justify-content: space-between;
-  }
-  .topbar-actions { display: flex; align-items: center; gap: 2px; }
-  .topbar-actions button {
-    transition: transform .15s ease, background-color .15s ease;
-    border-radius: 50%;
-  }
-  .topbar-actions button:active { transform: scale(0.88); background: var(--line); }
-  .brand {
-    font-family: var(--serif);
-    font-size: 23px;
-    font-weight: 600;
-    letter-spacing: -0.015em;
-  }
-  .brand .dot { color: var(--accent); }
-  .port-switch {
-    display: flex; gap: 7px; margin-top: 14px;
-    overflow-x: auto;
-    -ms-overflow-style: none; scrollbar-width: none;
-  }
-  .port-switch::-webkit-scrollbar { display: none; }
-  .port-chip {
-    flex: 0 0 auto;
-    padding: 7px 15px;
-    border-radius: 100px;
-    border: 1px solid var(--line);
-    background: var(--paper-raised);
-    font-size: 13.5px;
-    font-weight: 600;
-    color: var(--ink-soft);
-    cursor: pointer;
-    white-space: nowrap;
-    transition: all .18s cubic-bezier(.4,0,.2,1);
-  }
-  .port-chip:active { transform: scale(0.96); }
-  .port-chip.active {
-    background: var(--accent-dark);
-    color: var(--accent-dark-text);
-    border-color: var(--accent-dark);
-    box-shadow: var(--shadow-sm);
+  .tx-receipt{
+    font-size:0.72rem;
+    color:var(--crust-dark);
+    text-decoration:none;
+    display:block;
+    margin-top:2px;
   }
 
-  .section { padding: 22px 20px 0; }
-  .section-label {
-    font-size: 11.5px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--ink-soft);
-    margin-bottom: 10px;
+  .tx-item{
+    display:flex;
+    align-items:center;
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+    gap:10px;
   }
-  .section-label-row {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-bottom: 10px;
+  .tx-item:last-child{ border-bottom:none; }
+  .tx-main{ min-width:0; flex:1; }
+  .tx-desc{ font-size:0.9rem; font-weight:500; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .tx-meta{ font-size:0.75rem; color:var(--ink-soft); }
+  .tx-amt{
+    font-weight:700;
+    font-size:0.92rem;
+    white-space:nowrap;
+    min-width:82px;
+    flex-shrink:0;
+    text-align:right;
+    font-variant-numeric:tabular-nums;
   }
-  .section-label-row .section-label { margin-bottom: 0; }
-  .basis-toggle-inline {
-    display: flex; background: var(--line);
-    border-radius: 100px; padding: 2px;
+  .tx-amt.income{ color:var(--lettuce); }
+  .tx-amt.expense{ color:var(--tomato); }
+  .tx-del{
+    border:none; background:none; color:var(--ink-soft);
+    font-size:1rem; cursor:pointer; padding:4px 6px;
+    flex-shrink:0;
   }
-  .basis-btn-inline {
-    font-size: 10.5px; font-weight: 700; letter-spacing: 0.02em;
-    padding: 4px 9px; border-radius: 100px; color: var(--ink-soft);
-    cursor: pointer; transition: all .15s ease;
-  }
-  .basis-btn-inline.active { background: var(--paper-raised); color: var(--ink); }
-
-.hero-card {
-    /* ลบ radial-gradient ออก หรือปรับค่า alpha (0.35, 0.12) ให้เป็น 0 เพื่อยกเลิกความจาง */
-    background: var(--hero-bg); /* ปรับตามธีมสว่าง/มืด */
-    color: var(--hero-text);
-    border: 1px solid var(--hero-border);
-    border-radius: var(--radius-lg);
-    padding: 26px 22px 22px;
-    position: relative;
-    z-index: 0;
-    overflow: hidden;
-    box-shadow: var(--shadow-lg);
-    transition: background-color .2s ease, color .2s ease, border-color .2s ease;
-  }
-  .hero-bg-chart {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 35%;
-    z-index: -1;
-    opacity: 0.40;
-    pointer-events: none;
-  }
-  .hero-label {
-    font-size: 12px; letter-spacing: 0.07em; text-transform: uppercase;
-    color: var(--hero-text-dim); margin-bottom: 7px; font-weight: 600;
-  }
-  .hero-value {
-    font-family: var(--mono);
-    font-size: 40px;
-    font-weight: 600;
-    letter-spacing: -0.025em;
-    line-height: 1.08;
-  }
-  .hero-value .cents { font-size: 22px; opacity: 0.55; }
-  .hero-delta {
-    display: inline-flex; align-items: center; gap: 5px;
-    margin-top: 11px;
-    font-family: var(--mono);
-    font-size: 14px; font-weight: 600;
-    padding: 4px 10px 4px 8px;
-    border-radius: 100px;
-    backdrop-filter: blur(4px);
-  }
-  .hero-delta.up { background: var(--hero-gain-bg); color: var(--hero-gain-text); }
-  .hero-delta.down { background: var(--hero-loss-bg); color: var(--hero-loss-text); }
-  .hero-daily {
-    font-family: var(--mono);
-    font-size: 12px; margin-top: 9px;
-    color: var(--hero-text-dim);
-  }
-  .hero-daily b { font-weight: 600; }
-  .hero-daily.up b { color: var(--hero-gain-text); }
-  .hero-daily.down b { color: var(--hero-loss-text); }
-  .hero-yesterday-inline { opacity: 0.75; margin-left: 4px; }
-
-  .hero-yesterday-small {
-    font-family: var(--mono);
-    font-size: 11.5px; margin-top: 4px;
-    color: var(--hero-text-dim);
-  }
-  .hero-yesterday-small span { font-weight: 600; }
-
-  .basis-toggle {
-    display: flex; background: var(--hero-chip-bg);
-    border: 1px solid var(--hero-chip-border);
-    border-radius: 100px; padding: 3px;
-    margin-bottom: 16px;
-    width: fit-content;
-    max-width: 100%;
-    overflow-x: auto;
-  }
-  .basis-btn {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.01em;
-    padding: 6px 11px; border-radius: 100px; color: var(--hero-text-dim);
-    cursor: pointer; transition: all .18s cubic-bezier(.4,0,.2,1);
-    white-space: nowrap;
-  }
-  .basis-btn.active { background: var(--hero-chip-active-bg); color: var(--hero-chip-active-text); box-shadow: 0 2px 6px rgba(0,0,0,0.2); }
-
-  .hero-foot {
-    display: flex; gap: 14px; margin-top: 19px;
-    padding-top: 17px; border-top: 1px solid var(--hero-border);
-    flex-wrap: wrap; /* ป้องกันเนื้อหาถูกบีบ */
-  }
-  .hero-foot-item { flex: 1; min-width: 0; }
-  .hero-foot-label { font-size: 10.5px; color: var(--hero-text-dim); margin-bottom: 3px; line-height: 1.4; } /* เอา nowrap ออก */
-  .hero-foot-value { font-family: var(--mono); font-size: 14px; font-weight: 600; word-break: break-word; } /* เอา nowrap ออก */
-  .hero-foot-sub { font-family: var(--mono); font-size: 10.5px; color: var(--hero-text-dim); margin-top: 3px; line-height: 1.4; }
-  .foot-stock-change { font-weight: 600; }
-  .foot-stock-change.up { color: var(--hero-gain-text); }
-  .foot-stock-change.down { color: var(--hero-loss-text); }
-
-  .hero-cash-row {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--hero-border);
-  }
-  .hero-cash-label { font-size: 11.5px; color: var(--hero-text-dim); display: flex; align-items: center; gap: 6px; }
-  .hero-cash-value { font-family: var(--mono); font-size: 13.5px; font-weight: 600; }
-
-  .alloc-row-wrap {
-    background: var(--paper-raised);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    margin-bottom: 9px;
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    transition: box-shadow .2s ease, transform .15s ease;
-  }
-  .alloc-row-wrap:active { transform: scale(0.992); }
-  .alloc-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 14px 4px;
-  }
-  .alloc-target-block {
-    padding: 4px 14px 14px;
-  }
-  .alloc-icon {
-    width: 38px; height: 38px; border-radius: 50%;
-    flex: 0 0 auto;
-    overflow: hidden;
-    background: #fff;
-    display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 0 1px var(--line);
-  }
-  .alloc-icon img {
-    width: 100%; height: 100%; object-fit: cover;
-    display: block;
-  }
-  .alloc-icon-fallback {
-    width: 100%; height: 100%;
-    color: #fff; font-weight: 700; font-size: 14px;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .alloc-mid { flex: 1; min-width: 0; }
-  .alloc-ticker-row { display: flex; align-items: baseline; gap: 8px; }
-  .alloc-ticker { font-weight: 700; font-size: 14.5px; font-family: var(--mono); }
-  .alloc-current-price { font-size: 12px; color: var(--ink-soft); font-family: var(--mono); }
-.alloc-cost-row { font-size: 13.5px; font-weight: 700; font-family: var(--mono); margin-top: 3px; }
-.alloc-cost-row.cost-below { color: var(--gain); } /* ต้นทุนเฉลี่ยต่ำกว่าราคาปัจจุบัน = กำไร */
-.alloc-cost-row.cost-above { color: var(--loss); } /* ต้นทุนเฉลี่ยสูงกว่าราคาปัจจุบัน = ขาดทุน */
-.alloc-cost-row.cost-equal { color: var(--ink-soft); }
-.alloc-cost-total { font-size: 10.5px; color: var(--ink-soft); font-family: var(--mono); margin-top: 2px; }
-
-  .alloc-bar-track { height: 4px; background: var(--line); border-radius: 4px; margin-top: 6px; overflow: hidden; position: relative; }
-  .alloc-bar-fill { height: 100%; border-radius: 4px; }
-  .alloc-pct-row { display: flex; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
-  .alloc-pct { font-size: 11.5px; color: var(--ink-soft); font-family: var(--mono); }
-
-  .alloc-target-summary-text {
-    font-size: 11.5px; color: var(--ink-soft); font-family: var(--mono);
-    margin-top: 6px;
-    white-space: nowrap;
-    overflow-x: auto;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
-  .alloc-target-summary-text::-webkit-scrollbar { display: none; }
-  .alloc-target-summary-text b { color: var(--ink); }
-  .alloc-room-bar-track {
-    height: 7px; background: var(--line); border-radius: 4px;
-    margin-top: 5px; overflow: hidden;
-  }
-  .alloc-room-bar-fill { height: 100%; border-radius: 4px; transition: width .2s ease; }
-  .alloc-target-footer-row {
-    display: flex; align-items: center; justify-content: space-between;
-    margin-top: 4px; gap: 8px; flex-wrap: wrap; /* ป้องกันการบีบข้อความเมื่อแคบ */
-  }
-  .alloc-target-room-label { font-size: 10.5px; color: var(--ink-soft); }
-  .alloc-target-over-label { font-size: 10.5px; color: var(--loss); font-weight: 700; }
-
-  .alloc-target-add-btn, .alloc-target-edit-btn, .alloc-target-save-btn {
-    font-size: 10.5px; font-weight: 700;
-    color: var(--accent-text); background: var(--accent-soft);
-    border: 1px solid var(--accent-border); border-radius: 100px;
-    padding: 2px 9px; cursor: pointer; white-space: nowrap;
-  }
-  .alloc-target-save-btn { padding: 7px 12px; font-size: 13px; flex: 0 0 auto; }
-
-  .alloc-target-input-row {
-    display: flex; align-items: center; gap: 6px;
-    margin-top: 8px;
+  .tx-edit{
+    border:none; background:none; color:var(--ink-soft);
+    font-size:0.95rem; cursor:pointer; padding:4px 6px;
+    flex-shrink:0;
   }
 
-  .alloc-target-compare {
-    font-size: 10.5px; font-weight: 700; font-family: var(--mono);
-    padding: 1px 7px; border-radius: 100px;
-  }
-  .alloc-target-compare.ontarget { background: var(--gain-soft); color: var(--gain); }
-  .alloc-target-compare.over { background: var(--loss-soft); color: var(--loss); }
-  .alloc-target-compare.under { background: var(--line); color: var(--ink-soft); }
+  .empty{ text-align:center; color:var(--ink-soft); font-size:0.85rem; padding:20px 0; }
+  .loading{ text-align:center; color:var(--ink-soft); font-size:0.85rem; padding:20px 0; }
 
-  .alloc-sum-bar {
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 8px;
-    background: var(--paper-raised); border: 1px solid var(--line);
-    border-radius: var(--radius-sm); padding: 11px 14px; margin-bottom: 11px;
-    box-shadow: var(--shadow-sm);
-  }
-  .alloc-sum-label { font-size: 12.5px; color: var(--ink-soft); font-family: var(--mono); }
-  .alloc-sum-label b { color: var(--ink); }
-  .alloc-sum-status {
-    font-size: 11.5px; font-weight: 700; font-family: var(--mono);
-    padding: 3px 10px; border-radius: 100px;
-  }
-  .alloc-sum-status.ontarget { background: var(--gain-soft); color: var(--gain); }
-  .alloc-sum-status.over { background: var(--loss-soft); color: var(--loss); }
-  .alloc-sum-status.under { background: var(--accent-soft); color: var(--accent-text); }
-  .alloc-normalize-btn {
-    display: inline-flex; align-items: center; gap: 4px;
-    font-size: 11.5px; font-weight: 700; color: var(--accent-dark-text);
-    background: var(--accent-dark); border: none; border-radius: 100px;
-    padding: 5px 10px; cursor: pointer; white-space: nowrap;
-    transition: transform .12s ease;
-  }
-  .alloc-normalize-btn:active { transform: scale(0.94); }
-  .dca-calc-suffix { font-size: 13px; color: var(--ink-soft); font-weight: 600; }
-  .dca-alloc-projection {
-    margin-top: 6px; padding-top: 6px; border-top: 1px solid var(--accent-border);
-    font-size: 12px; color: var(--ink-soft); font-family: var(--mono);
-  }
-  .dca-alloc-projection b { color: var(--ink); }
-  .alloc-right { text-align: right; flex: 0 0 auto; }
-  .alloc-value { font-family: var(--mono); font-size: 14px; font-weight: 600; }
-  .alloc-gain { font-family: var(--mono); font-size: 12px; font-weight: 600; margin-top: 2px; }
-  .alloc-gain.up { color: var(--gain); }
-  .alloc-gain.down { color: var(--loss); }
+  .cat-row{ display:flex; justify-content:space-between; font-size:0.85rem; padding:6px 0; }
+  .cat-row .bar{ flex:1; height:6px; background:var(--line); border-radius:4px; margin:0 10px; overflow:hidden; }
+  .cat-row .bar-fill{ height:100%; background:var(--tomato); }
 
-  .dca-toggle-btn, .target-price-toggle-btn {
-    width: 100%;
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    border: none; border-top: 1px solid var(--line);
-    background: transparent;
-    color: var(--ink-soft);
-    font-size: 12px; font-weight: 600;
-    padding: 8px 14px;
-    cursor: pointer;
+  .period-item{
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
   }
-  .target-price-toggle-btn-top {
-    border-top: none;
-    border-bottom: 1px solid var(--line);
-    font-size: 14px;
-    font-weight: 700;
-    padding: 14px;
-    color: var(--accent-text);
-    background: var(--accent-soft);
+  .period-item:last-child{ border-bottom:none; }
+  .period-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin-bottom:5px;
   }
-  .target-price-toggle-btn-top .ti-target-arrow,
-  .target-price-toggle-btn-top .dca-toggle-chevron {
-    font-size: 17px;
-  }
-  .target-price-toggle-btn-top:active { background: var(--accent-border); }
-  .dca-toggle-btn:active, .target-price-toggle-btn:active { background: var(--accent-soft); }
-  .dca-toggle-chevron { transition: transform 0.15s ease; margin-left: 2px; }
-  .dca-toggle-btn.open .dca-toggle-chevron, .target-price-toggle-btn.open .dca-toggle-chevron { transform: rotate(180deg); }
+  .period-label{ font-size:0.85rem; font-weight:600; color:var(--ink-soft); }
+  .period-profit{ font-size:0.95rem; font-weight:700; }
+  .period-profit.pos{ color:var(--lettuce); }
+  .period-profit.neg{ color:var(--tomato); }
+  .period-bars{ display:flex; gap:3px; height:6px; border-radius:4px; overflow:hidden; background:var(--line); }
+  .period-bars .inc-bar{ background:var(--lettuce); }
+  .period-bars .exp-bar{ background:var(--tomato); }
+  .period-meta{ display:flex; justify-content:space-between; font-size:0.72rem; color:var(--ink-soft); margin-top:4px; }
 
-  .dca-calc {
-    border-top: 1px solid var(--line);
-    background: var(--accent-soft);
-    padding: 10px 14px;
+  .dl-item{
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
   }
-  .dca-calc-input-row {
-    display: flex; align-items: center; gap: 8px;
-    margin-bottom: 8px;
+  .dl-item:last-child{ border-bottom:none; }
+  .dl-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:6px;
   }
-  .dca-calc-label {
-    font-size: 12px; font-weight: 600; color: var(--accent-text); line-height: 1.3; /* เอา nowrap ออก */
+  .dl-date{ font-size:0.9rem; font-weight:700; }
+  .dl-actions button{
+    border:none; background:none; color:var(--ink-soft);
+    font-size:0.95rem; cursor:pointer; padding:2px 6px;
   }
-  .dca-calc-input, .alloc-target-input, .target-price-input {
-    flex: 1; min-width: 0;
-    padding: 7px 10px;
-    border-radius: 8px; border: 1px solid var(--accent-border);
-    font-size: 16px; font-family: var(--mono);
-    background: var(--paper-raised); color: var(--ink);
+  .dl-actions button:first-child:not(:only-child){ color:var(--crust-dark); }
+  .dl-grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:4px 14px;
+    font-size:0.8rem;
+    color:var(--ink-soft);
   }
-  .dca-calc-input:focus, .alloc-target-input:focus, .target-price-input:focus { outline: none; border-color: var(--accent); }
-  .dca-calc-result {
-    font-size: 12px; margin-top: 7px; color: var(--ink-soft); font-family: var(--mono);
+  .dl-menu{
+    font-size:0.78rem;
+    color:var(--crust-dark);
+    margin-bottom:6px;
   }
-  .dca-calc-result b { color: var(--ink); font-weight: 700; }
-  .dca-calc-drop { font-weight: 600; margin-left: 6px; }
-  .dca-calc-drop.down { color: var(--gain); }
-  .dca-calc-drop.up { color: var(--loss); }
-  .dca-calc-drop.gain { color: var(--gain); }
-  .dca-calc-drop.loss { color: var(--loss); }
-  .dca-calc-hint { color: var(--ink-soft); }
-  .dca-current {
-    font-size: 12px; color: var(--ink-soft); margin-bottom: 4px;
-  }
-  .dca-current b { color: var(--ink); font-weight: 700; }
+  .dl-grid b{ color:var(--ink); font-weight:600; }
 
-  .txn-date-group { margin-bottom: 4px; }
-  .txn-date-header {
-    font-size: 11.5px; font-weight: 700; color: var(--ink-soft);
-    text-transform: uppercase; letter-spacing: 0.04em;
-    padding: 12px 0 6px;
+  .accordion-header{
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
   }
-  .txn-date-group:first-child .txn-date-header { padding-top: 4px; }
-  .txn-row {
-    display: flex; align-items: center; gap: 12px;
-    padding: 10px 0;
-    border-bottom: 1px solid var(--line);
+  .accordion-header:active{ opacity:0.85; }
+  .accordion-header h2{ margin:0; }
+  .accordion-arrow{
+    color:var(--ink-soft);
+    font-size:0.85rem;
+    transition:transform 0.2s ease;
+    flex-shrink:0;
   }
-  .txn-date-group:last-child .txn-row:last-child { border-bottom: none; }
-  .txn-badge {
-    width: 34px; height: 34px; border-radius: 10px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 15px; font-weight: 700; flex: 0 0 auto;
-  }
-  .txn-badge.buy { background: var(--gain-soft); color: var(--gain); }
-  .txn-badge.sell { background: var(--loss-soft); color: var(--loss); }
-  .txn-mid { flex: 1; min-width: 0; }
-  .txn-stock { font-weight: 700; font-size: 14.5px; }
-  .txn-date { font-size: 12px; color: var(--ink-soft); margin-top: 1px; }
-  .txn-right { text-align: right; }
-  .txn-amount { font-family: var(--mono); font-weight: 600; font-size: 14px; }
-  .txn-shares { font-size: 11.5px; color: var(--ink-soft); font-family: var(--mono); }
-  .txn-pl { font-size: 11.5px; font-family: var(--mono); font-weight: 600; margin-top: 1px; }
-  .txn-pl.gain { color: var(--gain); }
-  .txn-pl.loss { color: var(--loss); }
-  .txn-edit {
-    flex: 0 0 auto;
-    width: 30px; height: 30px;
-    border-radius: 8px; border: none;
-    background: transparent;
-    color: var(--ink-soft);
-    font-size: 15px;
-    cursor: pointer;
-    margin-left: 2px;
-  }
-  .txn-edit:active { background: var(--surface-2); }
-  .txn-edit:disabled { opacity: 0.4; }
-  .txn-delete {
-    flex: 0 0 auto;
-    width: 30px; height: 30px;
-    border-radius: 8px; border: none;
-    background: transparent;
-    color: var(--ink-soft);
-    font-size: 15px;
-    cursor: pointer;
-    margin-left: 2px;
-  }
-  .txn-delete:active { background: var(--loss-soft); }
-  .txn-delete:disabled { opacity: 0.4; }
+  .accordion-arrow.open{ transform:rotate(180deg); }
+  .accordion-body{ margin-top:12px; }
 
-  .chart-card {
-    background: var(--paper-raised);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-md);
-    padding: 16px 14px 14px;
-    box-shadow: var(--shadow-sm);
+  #menuItemList{ margin-bottom:8px; }
+  .menu-row{
+    padding:6px 0;
+    border-bottom:1px solid var(--line);
   }
-  .chart-meta {
-    display: flex; justify-content: space-between; align-items: baseline;
-    margin-bottom: 10px; padding: 0 4px; flex-wrap: wrap; gap: 8px; /* ป้องกันเนื้อหาถูกบีบ */
+  .menu-row:last-child{ border-bottom:none; }
+  .menu-row-top{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    margin-bottom:4px;
   }
-  .chart-meta-value {
-    font-family: var(--mono); font-size: 17px; font-weight: 700;
+  .menu-row-name{ font-size:0.85rem; font-weight:600; }
+  .menu-row-sizes{
+    display:flex;
+    gap:14px;
   }
-  .chart-meta-delta {
-    font-family: var(--mono); font-size: 12.5px; font-weight: 600;
-    padding: 2px 8px; border-radius: 100px;
+  .menu-size-group{
+    flex:1;
+    display:flex;
+    flex-direction:row;
+    align-items:center;
+    gap:6px;
   }
-  .chart-meta-delta.up { background: var(--gain-soft); color: var(--gain); }
-  .chart-meta-delta.down { background: var(--loss-soft); color: var(--loss); }
-  .line-svg-wrap { position: relative; width: 100%; }
-  .line-svg-wrap svg { display: block; width: 100%; height: auto; }
-  .chart-axis-labels {
-    display: flex; justify-content: space-between;
-    font-size: 10.5px; color: var(--ink-soft); margin-top: 4px; padding: 0 2px;
+  .menu-size-label{ font-size:0.72rem; color:var(--ink-soft); min-width:26px; }
+  .menu-stepper{
+    display:flex;
+    align-items:center;
+    gap:0;
+    flex-shrink:0;
   }
-
-  .pie-wrap { display: flex; align-items: center; gap: 18px; }
-  .pie-wrap svg { flex: 0 0 auto; }
-  .legend { flex: 1; display: flex; flex-direction: column; gap: 7px; min-width: 0; }
-  .legend-item { display: flex; align-items: center; gap: 8px; font-size: 12.5px; }
-  .legend-swatch { width: 9px; height: 9px; border-radius: 3px; flex: 0 0 auto; }
-  .legend-ticker { font-weight: 700; font-family: var(--mono); width: 42px; flex: 0 0 auto; }
-  .legend-pct { color: var(--ink-soft); font-family: var(--mono); margin-left: auto; }
-
-  .bar-chart-wrap {
-    display: flex; align-items: flex-end; gap: 6px;
-    height: 180px; padding: 0 2px 0;
+  .menu-stepper input[type="number"]{
+    width:28px;
+    text-align:center;
+    padding:3px 2px;
+    border-left:none;
+    border-right:none;
+    border-radius:0;
+    font-size:0.85rem;
+    -moz-appearance:textfield;
   }
-  .bar-col {
-    display: flex; flex-direction: column; align-items: center;
-    flex: 1 1 0; min-width: 0; max-width: 56px;
-    height: 100%;
-    justify-content: flex-end;
+  .menu-stepper input[type="number"]::-webkit-inner-spin-button,
+  .menu-stepper input[type="number"]::-webkit-outer-spin-button{
+    -webkit-appearance:none;
+    margin:0;
   }
-  .bar-pct-label {
-    font-family: var(--mono); font-size: 10px; font-weight: 700;
-    color: var(--ink-soft); margin-bottom: 4px; white-space: nowrap;
+  .stepper-btn{
+    width:22px;
+    height:24px;
+    border:1px solid var(--line);
+    background:var(--cream);
+    color:var(--crust-dark);
+    font-size:0.9rem;
+    font-weight:700;
+    cursor:pointer;
+    line-height:1;
   }
-  .bar-fill {
-    width: 70%;
-    max-width: 22px;
-    border-radius: 7px 7px 3px 3px;
-    min-height: 3px;
+  .stepper-btn:first-child{ border-radius:6px 0 0 6px; }
+  .stepper-btn:last-child{ border-radius:0 6px 6px 0; }
+  .stepper-btn:active{ background:var(--line); }
+  .menu-row-del{
+    border:none; background:none; color:var(--ink-soft);
+    font-size:0.9rem; cursor:pointer; padding:2px 4px; flex-shrink:0;
   }
-  .bar-ticker-label {
-    font-family: var(--mono); font-size: 10.5px; font-weight: 700;
-    margin-top: 8px; color: var(--ink);
-    text-align: center; word-break: break-word; /* เอาจุดไข่ปลาและบรรทัดเดียวออก */
+  .menu-add-row{
+    display:flex;
+    gap:8px;
+    margin-bottom:14px;
   }
-
-  .empty-state .icon { font-size: 32px; margin-bottom: 8px; }
-  .empty-state .msg { font-size: 13.5px; }
-
-  .skel {
-    background: linear-gradient(90deg, var(--line) 25%, var(--skel-shine) 37%, var(--line) 63%);
-    background-size: 400% 100%;
-    animation: shimmer 1.4s ease infinite;
-    border-radius: 10px;
+  .menu-add-row input{ flex:1; }
+  .menu-add-row button{
+    border:none;
+    background:var(--crust-dark);
+    color:#fff;
+    border-radius:8px;
+    padding:0 14px;
+    font-size:0.85rem;
+    font-weight:600;
+    cursor:pointer;
+    white-space:nowrap;
   }
-  @keyframes shimmer { 0% { background-position: 100% 0; } 100% { background-position: 0 0; } }
-  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-  #refreshBtn.spinning i { display: inline-block; animation: spin 0.7s linear infinite; }
-  #refreshBtn:disabled { opacity: 0.6; cursor: default; }
-
-  .fab {
-    position: fixed;
-    bottom: max(24px, env(safe-area-inset-bottom));
-    right: 20px;
-    width: 58px; height: 58px;
-    border-radius: 50%;
-    background: linear-gradient(155deg, #1A1D24, var(--accent-dark));
-    color: var(--accent-dark-text);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 26px;
-    font-weight: 300;
-    border: none;
-    box-shadow: var(--shadow-lg);
-    cursor: pointer;
-    z-index: 30;
-    transition: transform .15s cubic-bezier(.4,0,.2,1);
-  }
-  .fab:active { transform: scale(0.9); }
-
-  .sheet-backdrop {
-    position: fixed; inset: 0;
-    background: rgba(14,17,22,0.45);
-    z-index: 40;
-    opacity: 0; pointer-events: none;
-    transition: opacity .2s ease;
-  }
-  .sheet-backdrop.open { opacity: 1; pointer-events: auto; }
-  .sheet {
-    position: fixed; left: 0; right: 0; bottom: 0;
-    background: var(--paper);
-    border-radius: 28px 28px 0 0;
-    z-index: 41;
-    transform: translateY(100%);
-    transition: transform .32s cubic-bezier(.32,.72,0,1);
-    max-height: 88vh;
-    overflow-y: auto;
-    padding-bottom: max(28px, env(safe-area-inset-bottom));
-    box-shadow: 0 -16px 48px rgba(14,17,22,0.18);
-  }
-  .sheet.open { transform: translateY(0); }
-  .sheet-handle {
-    width: 36px; height: 4px; background: var(--line);
-    border-radius: 4px; margin: 12px auto 6px;
-  }
-  .sheet-head {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 20px 16px;
-  }
-  .sheet-title { font-family: var(--serif); font-size: 19px; font-weight: 600; }
-  .sheet-close {
-    width: 30px; height: 30px; border-radius: 50%;
-    background: var(--line); border: none;
-    font-size: 16px; color: var(--ink-soft);
-    display: flex; align-items: center; justify-content: center;
-  }
-  .sheet-body { padding: 0 20px; }
-
-  .action-toggle {
-    display: flex; gap: 8px; margin-bottom: 18px;
-  }
-  .action-btn {
-    flex: 1; padding: 12px; border-radius: var(--radius-sm);
-    border: 1.5px solid var(--line);
-    background: var(--paper-raised);
-    font-weight: 700; font-size: 14.5px;
-    color: var(--ink-soft);
-    cursor: pointer;
-    transition: all .15s ease;
-  }
-  .action-btn.buy.active { border-color: var(--gain); background: var(--gain-soft); color: var(--gain); }
-  .action-btn.sell.active { border-color: var(--loss); background: var(--loss-soft); color: var(--loss); }
-
-  .field { margin-bottom: 14px; }
-  .field-label {
-    font-size: 12.5px; font-weight: 600; color: var(--ink-soft);
-    margin-bottom: 6px; display: block;
-  }
-  .field input, .field select {
-    width: 100%;
-    padding: 13px 14px;
-    border-radius: var(--radius-sm);
-    border: 1.5px solid var(--line);
-    background: var(--paper-raised);
-    font-size: 16px;
-    font-family: var(--sans);
-    color: var(--ink);
-    appearance: none;
-    transition: border-color .15s ease, box-shadow .15s ease;
-  }
-  .field input:focus, .field select:focus {
-    outline: none; border-color: var(--ink);
-    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 8%, transparent);
-  }
-  .field-row { display: flex; gap: 10px; }
-  .field-row .field { flex: 1; }
-
-  .submit-btn {
-    width: 100%; padding: 16px;
-    border-radius: var(--radius-sm); border: none;
-    background: linear-gradient(155deg, #1A1D24, var(--accent-dark));
-    color: var(--accent-dark-text);
-    font-size: 15.5px; font-weight: 700;
-    margin-top: 6px;
-    cursor: pointer;
-    box-shadow: var(--shadow-md);
-    transition: transform .12s ease, opacity .15s ease;
-  }
-  .submit-btn:active { transform: scale(0.98); }
-  .submit-btn:disabled { opacity: 0.5; box-shadow: none; }
-
-  .form-msg {
-    font-size: 13px; text-align: center; margin-top: 10px; min-height: 18px;
-  }
-  .form-msg.error { color: var(--loss); }
-  .form-msg.success { color: var(--gain); }
-
-  .setup-banner {
-    margin: 16px 20px 0;
-    background: var(--accent-soft);
-    border: 1px solid var(--accent-border);
-    border-radius: 12px;
-    padding: 12px 14px;
-    font-size: 13px;
-    color: var(--accent-text);
-    line-height: 1.5;
-  }
-  .setup-banner code {
-    background: rgba(0,0,0,0.06);
-    padding: 1px 5px; border-radius: 5px; font-size: 12px;
-  }
-  .url-input-row {
-    display: flex; gap: 6px; margin-top: 8px;
-  }
-  .setup-banner input {
-    flex: 1; min-width: 0;
-    padding: 9px 10px; border-radius: 8px;
-    border: 1px solid var(--accent-border); font-size: 16px;
-    box-sizing: border-box;
-    background: var(--paper-raised); color: var(--ink);
-  }
-  #apiUrlClear {
-    flex: 0 0 auto;
-    width: 36px;
-    padding: 9px 0; border-radius: 8px;
-    border: 1px solid var(--accent-border);
-    background: var(--paper-raised);
-    color: var(--accent-text); font-size: 14px; font-weight: 700;
-    cursor: pointer;
-  }
-  .setup-banner button#apiUrlSave {
-    margin-top: 8px; padding: 8px 14px;
-    background: var(--accent-dark); color: var(--accent-dark-text);
-    border: none; border-radius: 8px; font-size: 13px; font-weight: 600;
-  }
-  .setup-hint {
-    margin-top: 10px; font-size: 11.5px; color: var(--accent-text);
-    line-height: 1.4; border-top: 1px solid var(--accent-border); padding-top: 8px;
-    opacity: 0.85;
-  }
-
-  /* ==================== แท็บ "ค้นหาหุ้น" (Lookup) ==================== */
-  .view-switch { display:flex; gap:7px; margin-top:10px; }
-  .view-chip { flex:0 0 auto; padding:7px 15px; border-radius:100px; border:1px solid var(--line);
-    background:var(--paper-raised); font-size:13.5px; font-weight:600; color:var(--ink-soft);
-    cursor:pointer; transition:all .18s cubic-bezier(.4,0,.2,1); }
-  .view-chip:active { transform:scale(0.96); }
-  .view-chip.active { background:var(--accent-dark); color:var(--accent-dark-text); border-color:var(--accent-dark); box-shadow:var(--shadow-sm); }
-
-  .lookup-controls { display:flex; gap:8px; }
-  .lookup-controls input { flex:1; font:600 15px var(--mono); background:var(--paper-raised); color:var(--ink);
-    border:1px solid var(--line); border-radius:var(--radius-sm); padding:12px; text-transform:uppercase; }
-  .lookup-controls button { font:600 13.5px var(--sans); background:var(--accent-dark); color:var(--accent-dark-text);
-    border:none; border-radius:var(--radius-sm); padding:0 18px; cursor:pointer; }
-  .lookup-status { font:500 12.5px var(--mono); color:var(--ink-soft); margin:10px 0; }
-
-  .watchlist-section { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:14px 0; }
-  .watchlist-col { background:var(--paper-raised); border:1px solid var(--line); border-radius:var(--radius-md);
-    padding:12px; box-shadow:var(--shadow-sm); }
-  .watchlist-title { font:700 11px var(--sans); color:var(--ink-soft); letter-spacing:.03em; text-transform:uppercase;
-    display:flex; align-items:center; gap:6px; margin-bottom:8px; }
-  .watchlist-list { display:flex; flex-direction:column; gap:6px; min-height:8px; }
-  .watchlist-empty { font:500 12px var(--sans); color:var(--ink-soft); opacity:.6; padding:6px 2px; }
-  .watchlist-row { display:flex; align-items:center; gap:8px; background:var(--paper); border:1px solid var(--line);
-    border-radius:var(--radius-sm); padding:8px 10px; cursor:pointer; transition:.12s; }
-  .watchlist-row:active { transform:scale(0.98); }
-  .wl-ticker { font:700 13px var(--sans); flex-shrink:0; }
-  .wl-price { font:600 11px var(--mono); color:var(--ink-soft); flex-shrink:0; }
-  .wl-trend { font:600 10px var(--sans); padding:3px 7px; border-radius:999px; border:1px solid; margin-left:auto;
-    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:120px; }
-  .wl-remove { border:none; background:transparent; color:var(--ink-soft); cursor:pointer; padding:2px 4px;
-    flex-shrink:0; font-size:13px; line-height:1; }
-  .wl-remove:active { color:var(--loss); }
-
-  .lookup-card { max-width:460px; background:var(--paper-raised); border:1px solid var(--line);
-    border-radius:var(--radius-lg); padding:18px; box-shadow:var(--shadow-md); }
-  .lookup-card-head { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:14px; gap:10px; }
-  .lookup-eyebrow { font:700 10.5px var(--sans); letter-spacing:.06em; color:var(--gain); text-transform:uppercase; }
-  .lookup-ticker-row { display:flex; align-items:center; gap:10px; margin-top:6px; }
-  .lookup-ticker-logo { width:34px; height:34px; border-radius:9px; object-fit:cover; background:var(--line); }
-  .lookup-ticker-name { font:700 20px var(--sans); }
-  .lookup-price-line { font:600 12.5px var(--mono); color:var(--ink-soft); margin-top:2px; }
-
-  .trend-badge { border:1px solid; border-radius:var(--radius-sm); padding:8px 14px; text-align:center; flex-shrink:0; }
-  .trend-badge .tlabel { font:700 9px var(--sans); letter-spacing:.05em; opacity:.8; }
-  .trend-badge .tvalue { font:700 14px var(--sans); margin-top:2px; }
-  .trend-loss { border-color:var(--loss); background:var(--loss-soft); color:var(--loss); }
-  .trend-gain { border-color:var(--gain); background:var(--gain-soft); color:var(--gain); }
-  .trend-neutral { border-color:var(--line); background:var(--paper); color:var(--ink-soft); }
-  .trend-loss-plain { border-color:transparent; background:var(--loss); color:#fff; }
-  .trend-gain-plain { border-color:transparent; background:var(--gain); color:#fff; }
-  .trend-watch { border-color:var(--accent); background:var(--accent-soft); color:var(--accent-text); }
-
-  .lookup-ema-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
-  .lookup-ema-box { background:var(--paper); border:1px solid var(--line); border-radius:var(--radius-sm); padding:10px; }
-  .lookup-ema-box .elabel { font:600 11px var(--sans); color:var(--ink-soft); }
-  .lookup-ema-box .epct { font:700 15px var(--mono); margin-top:4px; }
-  .lookup-ema-box .eprice { font:500 11px var(--mono); color:var(--ink-soft); }
-  .lookup-up { color:var(--gain); } .lookup-down { color:var(--loss); }
-
-  .lookup-ha-row { display:flex; gap:8px; margin-bottom:14px; }
-  .lookup-ha-pill { flex:1; border-radius:var(--radius-sm); padding:10px 12px; font:600 13px var(--sans);
-    border:1px solid var(--line); background:var(--paper); }
-  .lookup-ha-pill.active-green { border-color:var(--gain); background:var(--gain-soft); color:var(--gain); }
-  .lookup-ha-pill.active-red { border-color:var(--loss); background:var(--loss-soft); color:var(--loss); }
-
-  .lookup-insight-box { background:var(--accent-soft); border:1px solid var(--accent-border); border-radius:var(--radius-md);
-    padding:12px 14px; margin-bottom:12px; }
-  .lookup-insight-box .ititle { font:700 14px var(--sans); color:var(--accent-text); display:flex; align-items:center; gap:6px; }
-  .lookup-insight-box .itext { font:400 12.5px var(--sans); color:var(--ink); opacity:.85; margin-top:6px; line-height:1.55; }
-  .lookup-insight-box .ieyebrow { font:700 10px var(--sans); letter-spacing:.05em; text-transform:uppercase; opacity:.75; margin-bottom:4px; }
-  .lookup-insight-box .istat { font:700 15px var(--mono); margin-top:6px; }
-
-  .lookup-insight-box.chase-risk { background:var(--loss-soft); border-color:var(--loss); }
-  .lookup-insight-box.chase-risk .ieyebrow, .lookup-insight-box.chase-risk .istat { color:var(--loss); }
-  .lookup-insight-box.chase-risk .ititle { color:var(--loss); }
-  .lookup-insight-box.rsi-div { background:var(--loss-soft); border-color:var(--loss); }
-  .lookup-insight-box.rsi-div .ititle { color:var(--loss); }
-  .lookup-insight-box.support-break, .lookup-insight-box.support-test { background:var(--accent-soft); border-color:var(--accent-border); }
-  .lookup-insight-box.ema200-touch { background:var(--info-soft); border-color:var(--info-border); }
-  .lookup-insight-box.ema200-touch .ititle { color:var(--info-text); }
-
-  .lookup-info-line { text-align:left; font:600 13px var(--sans); color:var(--ink);
-    border:1px solid var(--line); background:var(--paper); border-radius:var(--radius-md);
-    padding:12px 14px; margin-bottom:12px; }
-
-  .lookup-no-signal { text-align:center; font:500 12.5px var(--sans); color:var(--ink-soft);
-    border:1px dashed var(--line); border-radius:var(--radius-md); padding:14px; margin-bottom:12px; }
-
-  .lookup-mark-row { display:flex; gap:8px; }
-  .lookup-mark-btn { flex:1; background:var(--paper); border:1px solid var(--line); color:var(--ink-soft);
-    font:600 13px var(--sans); padding:11px; border-radius:var(--radius-md); cursor:pointer;
-    display:flex; align-items:center; justify-content:center; gap:6px; }
-  .lookup-mark-btn.interested.active { background:var(--gain-soft); border-color:var(--gain); color:var(--gain); }
-  .lookup-mark-btn.ignored.active { background:var(--loss-soft); border-color:var(--loss); color:var(--loss); }
 </style>
 </head>
 <body>
+  <div class="stripe"></div>
+  <header>
+    <div class="wrap">
+      <h1>🥪 San SandWich</h1>
+      <p>บันทึกรายรับ-รายจ่ายประจำวัน</p>
+    </div>
+  </header>
 
-  <div class="topbar">
-    <div class="topbar-row">
-      <div class="brand">My Port<span class="dot">.</span></div>
-      <div class="topbar-actions">
-        <button id="refreshBtn" title="รีเฟรชข้อมูล" style="background:none;border:none;font-size:17px;color:var(--ink-soft);cursor:pointer;padding:4px;display:flex;align-items:center;"><i class="ti ti-refresh"></i></button>
-        <button id="themeToggleBtn" style="background:none;border:none;font-size:17px;color:var(--ink-soft);cursor:pointer;padding:4px;display:flex;align-items:center;"><i class="ti ti-moon"></i></button>
-        <button id="settingsBtn" style="background:none;border:none;font-size:18px;color:var(--ink-soft);cursor:pointer;padding:4px;display:flex;align-items:center;"><i class="ti ti-settings"></i></button>
+  <div class="wrap">
+    <div class="toggle" style="margin-top:14px;">
+      <button type="button" class="active neutral" id="tabFinance" onclick="switchTab('finance')">รายรับ-รายจ่าย</button>
+      <button type="button" id="tabDailyLog" onclick="switchTab('dailylog')">บันทึกประจำวัน</button>
+    </div>
+
+    <div id="financeView">
+    <div class="hero">
+      <div class="label">กำไร/ขาดทุนสุทธิ</div>
+      <div class="value" id="netProfit">฿0</div>
+      <div class="sub">
+        <div class="inc">รายรับ<b id="totalIncome">฿0</b></div>
+        <div class="exp">รายจ่าย<b id="totalExpense">฿0</b></div>
       </div>
     </div>
-    <div class="port-switch" id="portSwitch"></div>
-    <div class="view-switch">
-      <div class="view-chip active" data-view="portView">พอร์ต</div>
-      <div class="view-chip" data-view="lookupView">ค้นหาหุ้น</div>
-    </div>
-  </div>
 
-  <div id="portView">
-  <div id="setupBanner"></div>
-
-  <!-- 1. Portfolio Value -->
-  <div class="section">
-    <div class="section-label">Portfolio Value · มูลค่าพอร์ต</div>
-    <div class="hero-card">
-      <svg class="hero-bg-chart" id="heroBgChart" viewBox="0 0 400 200" preserveAspectRatio="none"></svg>
-      <div class="hero-label" id="heroLabel">มูลค่าปัจจุบัน</div>
-      <div class="hero-value" id="heroValue">—</div>
-      <div class="hero-delta" id="heroDelta" style="display:none"></div>
-      <div class="hero-daily" id="heroDaily" style="display:none"></div>
-      <div class="hero-yesterday-small" id="heroYesterdaySmall" style="display:none">
-        <span id="heroYesterdayLabel">เมื่อวาน</span> $<span id="heroYesterdayValue">—</span>
+    <div class="card">
+      <div class="accordion-header" onclick="toggleAccordion('addTxBody')">
+        <h2 id="formTitle">เพิ่มรายการ</h2>
+        <span class="accordion-arrow" id="addTxBodyArrow">▾</span>
       </div>
-      <div class="hero-foot">
-        <div class="hero-foot-item">
-          <div class="hero-foot-label">มูลค่าหุ้น</div>
-          <div class="hero-foot-value" id="footStockValue">—</div>
-          <div class="hero-foot-sub" id="footCostSub">—</div>
+      <div class="accordion-body" id="addTxBody" style="display:none;">
+      <div class="toggle">
+        <button type="button" class="active income" id="btnIncome" onclick="setType('รายรับ')">รายรับ</button>
+        <button type="button" class="expense" id="btnExpense" onclick="setType('รายจ่าย')">รายจ่าย</button>
+      </div>
+
+      <label>วันที่</label>
+      <input type="date" id="fDate">
+
+      <label>หมวดหมู่</label>
+      <input type="text" id="fCategory" placeholder="เช่น ขนมปัง, ค่าเช่า, ขายหน้าร้าน">
+
+      <label>รายละเอียด</label>
+      <input type="text" id="fDesc" placeholder="เช่น ซื้อขนมปัง 20 ก้อน">
+
+      <label>จำนวนเงิน (บาท)</label>
+      <input type="number" id="fAmount" placeholder="0.00" step="0.01" min="0" onfocus="this.select(); scrollFieldIntoView(this)" oninput="stripLeadingZero(this)">
+
+      <label>รูปบิล (ถ้ามี)</label>
+      <input type="file" id="fReceipt" accept="image/*,.pdf" onchange="onReceiptChosen()">
+      <div id="receiptPreview" style="display:none;"></div>
+
+      <button class="submit-btn" id="submitBtn" onclick="submitTx()">บันทึกรายการ</button>
+      <button class="cancel-btn" id="cancelBtn" onclick="cancelEdit()" style="display:none;">ยกเลิกการแก้ไข</button>
+      </div>
+    </div>
+
+    <div class="card" id="catCard" style="display:none;">
+      <div class="accordion-header" onclick="toggleAccordion('catBody')">
+        <h2>รายจ่ายแยกตามหมวด</h2>
+        <span class="accordion-arrow" id="catBodyArrow">▾</span>
+      </div>
+      <div class="accordion-body" id="catBody" style="display:none;">
+        <select id="catMonthSelect" onchange="renderCategoriesForMonth()" style="margin-bottom:10px;"></select>
+        <div id="catList"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="accordion-header" onclick="toggleAccordion('periodBody')">
+        <h2>สรุปยอด</h2>
+        <span class="accordion-arrow" id="periodBodyArrow">▾</span>
+      </div>
+      <div class="accordion-body" id="periodBody" style="display:none;">
+        <div class="toggle">
+          <button type="button" class="active neutral" id="btnWeekly" onclick="setPeriodView('weekly')">รายสัปดาห์</button>
+          <button type="button" id="btnMonthly" onclick="setPeriodView('monthly')">รายเดือน</button>
         </div>
-        <div class="hero-foot-item">
-          <div class="hero-foot-label" id="footProfitLabel">Unrealized P/L</div>
-          <div class="hero-foot-value" id="footProfit">—</div>
+        <div id="periodList"><div class="empty">ยังไม่มีข้อมูล</div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>รายการล่าสุด</h2>
+      <select id="txWeekSelect" onchange="renderTxListForWeek()" style="margin-bottom:10px;"></select>
+      <div id="txList"><div class="loading">กำลังโหลด...</div></div>
+    </div>
+    </div>
+
+    <div id="dailyLogView" style="display:none;">
+      <div class="card">
+        <div class="accordion-header" onclick="toggleAccordion('dlFormBody')">
+          <h2 id="dailyLogFormTitle">บันทึกประจำวัน</h2>
+          <span class="accordion-arrow" id="dlFormBodyArrow">▾</span>
         </div>
-      </div>
-      <div class="hero-cash-row" id="heroCashRow" style="display:none">
-        <div class="hero-cash-label"><i class="ti ti-cash" aria-hidden="true"></i>Cash (USD)</div>
-        <div style="display:flex;align-items:center;gap:8px">
-          <div class="hero-cash-value" id="heroCashValue">—</div>
-          <button type="button" id="editCashBtn" title="แก้ไขยอดเงินสดจริง" style="background:none;border:none;cursor:pointer;color:var(--hero-text-dim);padding:2px;display:flex;align-items:center">
-            <i class="ti ti-pencil" aria-hidden="true" style="font-size:14px"></i>
-          </button>
+        <div class="accordion-body" id="dlFormBody" style="display:none;">
+        <label>วันที่</label>
+        <input type="date" id="dlDate">
+
+        <label>เมนูที่จะทำวันนี้</label>
+        <div id="menuItemList"></div>
+        <div id="menuTotalDisplay" style="text-align:right; font-weight:700; font-size:0.85rem; color:var(--crust-dark); margin:2px 0 10px;">รวมทั้งหมด 0 ชิ้น</div>
+        <div class="menu-add-row">
+          <input type="text" id="menuNewName" placeholder="เพิ่มเมนูใหม่ เช่น หมูหยอง">
+          <button type="button" onclick="addMenuItemUI()">+ เพิ่ม</button>
         </div>
-      </div>
-      <div class="hero-cash-row" id="heroTotalRow" style="display:none;margin-top:8px;padding-top:8px;border-top:none">
-        <div class="hero-cash-label"><i class="ti ti-wallet" aria-hidden="true"></i>มูลค่ารวม (หุ้น + เงินสด)</div>
-        <div class="hero-cash-value" id="heroTotalValue">—</div>
-      </div>
-      <div class="hero-cash-row" id="heroPrincipalRow" style="display:none;margin-top:8px;padding-top:8px;border-top:none">
-        <div class="hero-cash-label"><i class="ti ti-piggy-bank" aria-hidden="true"></i>เงินต้น</div>
-        <div class="hero-cash-value" id="heroPrincipalValue">—</div>
-      </div>
-    </div>
-  </div>
 
-  <!-- 2. กราฟแท่งมูลค่าปัจจุบัน -->
-  <div class="section">
-    <div class="section-label">Market Value · มูลค่าปัจจุบัน (พร้อม P/L%)</div>
-    <div class="chart-card" id="barChartCard">
-      <div class="skel" style="height:200px;"></div>
-    </div>
-  </div>
+        <label>วันนี้ทำ (กล่อง) <span style="font-weight:400; color:var(--ink-soft); font-size:0.75rem;">— รวมจากเมนูด้านบน แก้ไขได้</span></label>
+        <input type="number" id="dlMade" placeholder="0" min="0" onfocus="this.select(); scrollFieldIntoView(this)" oninput="stripLeadingZero(this); recalcDailyLog()">
 
-  <!-- 3. กราฟวงกลมสัดส่วนหุ้น -->
-  <div class="section">
-    <div class="section-label">Allocation · สัดส่วนหุ้น</div>
-    <div class="chart-card" id="donutChartCard">
-      <div class="skel" style="height:180px;"></div>
-    </div>
-  </div>
+        <label>ขายได้ (กล่อง)</label>
+        <input type="number" id="dlSold" placeholder="0" min="0" onfocus="this.select(); scrollFieldIntoView(this)" oninput="stripLeadingZero(this); recalcDailyLog()">
 
-  <!-- 4. สัดส่วนการลงทุนรายตัว -->
-  <div class="section">
-    <div class="section-label-row">
-      <div class="section-label">Investment Mix · สัดส่วนการลงทุน</div>
-      <div class="basis-toggle-inline" id="basisToggle">
-        <div class="basis-btn-inline active" data-basis="AVG">AVG</div>
-        <div class="basis-btn-inline" data-basis="FIFO">FIFO</div>
-      </div>
-    </div>
-    <div id="allocList">
-      <div class="skel" style="height:64px;margin-bottom:8px"></div>
-      <div class="skel" style="height:64px;margin-bottom:8px"></div>
-      <div class="skel" style="height:64px"></div>
-    </div>
-  </div>
+        <label>เหลือ (กล่อง) <span style="font-weight:400; color:var(--ink-soft); font-size:0.75rem;">— คำนวณอัตโนมัติ แก้ไขได้</span></label>
+        <input type="number" id="dlRemaining" placeholder="0" min="0" onfocus="this.select(); scrollFieldIntoView(this)" oninput="stripLeadingZero(this)">
 
-  <div class="section">
-    <div class="section-label">Recent Activity · รายการล่าสุด</div>
-    <div id="txnList" style="background:var(--paper-raised);border:1px solid var(--line);border-radius:var(--radius-md);padding:4px 14px;box-shadow:var(--shadow-sm);">
-      <div class="skel" style="height:50px;margin:10px 0;"></div>
-      <div class="skel" style="height:50px;margin:10px 0;"></div>
-    </div>
-  </div>
+        <label>เอาไป (กล่อง)</label>
+        <input type="number" id="dlTakenAway" placeholder="0" min="0" onfocus="this.select(); scrollFieldIntoView(this)" oninput="stripLeadingZero(this)">
 
-  <button class="fab" id="fabAdd"><i class="ti ti-plus"></i></button>
+        <label>เงินโอน (บาท)</label>
+        <input type="number" id="dlTransfer" placeholder="0.00" step="0.01" min="0" onfocus="this.select(); scrollFieldIntoView(this)" oninput="stripLeadingZero(this); recalcDailyLog()">
 
-  <div class="sheet-backdrop" id="sheetBackdrop"></div>
-  <div class="sheet" id="addSheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-head">
-      <div class="sheet-title" id="sheetTitle">เพิ่มรายการ</div>
-      <button class="sheet-close" id="sheetClose">✕</button>
-    </div>
-    <div class="sheet-body">
-      <div class="action-toggle">
-        <div class="action-btn buy active" data-action="ซื้อ">ซื้อ</div>
-        <div class="action-btn sell" data-action="ขาย">ขาย</div>
-      </div>
+        <label>เงินสด (บาท) <span style="font-weight:400; color:var(--ink-soft); font-size:0.75rem;">— คำนวณอัตโนมัติ แก้ไขได้</span></label>
+        <input type="number" id="dlCash" placeholder="0.00" step="0.01" min="0" onfocus="this.select(); scrollFieldIntoView(this)" oninput="stripLeadingZero(this)">
 
-      <div class="field">
-        <label class="field-label">พอร์ต</label>
-        <select id="fPort"></select>
-      </div>
+        <label>เงินทอน (บาท)</label>
+        <input type="number" id="dlBasketCash" placeholder="0.00" step="0.01" min="0" onfocus="this.select(); scrollFieldIntoView(this)" oninput="stripLeadingZero(this)">
 
-      <div class="field">
-        <label class="field-label">ชื่อหุ้น</label>
-        <input type="text" id="fStock" placeholder="เช่น AAPL" autocapitalize="characters">
-      </div>
-
-      <div class="field-row">
-        <div class="field">
-          <label class="field-label">จำนวนเงินรวม ($)</label>
-          <input type="number" id="fAmount" placeholder="0.00" inputmode="decimal">
-        </div>
-        <div class="field">
-          <label class="field-label">จำนวนหุ้น</label>
-          <input type="number" id="fShares" placeholder="0.000000" inputmode="decimal">
+        <button class="submit-btn" id="dlSubmitBtn" onclick="submitDailyLog()">บันทึก</button>
+        <button class="cancel-btn" id="dlCancelBtn" onclick="cancelDailyLogEdit()" style="display:none;">ยกเลิกการแก้ไข</button>
         </div>
       </div>
 
-      <div class="field">
-        <label class="field-label">Date</label>
-        <input type="date" id="fDate">
-      </div>
-
-      <div class="field">
-        <label class="field-label">โน้ต (ไม่บังคับ)</label>
-        <input type="text" id="fNote" placeholder="">
-      </div>
-
-      <button class="submit-btn" id="submitBtn">บันทึกรายการ</button>
-      <div class="form-msg" id="formMsg"></div>
-    </div>
-  </div>
-  </div><!-- /#portView -->
-
-  <div id="lookupView" style="display:none; padding:22px 20px 0;">
-    <div class="lookup-controls">
-      <input type="text" id="tickerInput" placeholder="เช่น EOSE">
-      <button id="lookupSearchBtn">ค้นหา</button>
-    </div>
-    <div id="lookupStatus" class="lookup-status"></div>
-
-    <div class="watchlist-section">
-      <div class="watchlist-col">
-        <div class="watchlist-title"><i class="ti ti-star"></i> My Port</div>
-        <div id="interestedList" class="watchlist-list"></div>
-      </div>
-      <div class="watchlist-col">
-        <div class="watchlist-title"><i class="ti ti-lock"></i> Watchlists</div>
-        <div id="ignoredList" class="watchlist-list"></div>
+      <div class="card">
+        <h2>ประวัติบันทึกประจำวัน</h2>
+        <p style="margin:-6px 0 12px; font-size:0.78rem; color:var(--ink-soft);">พรุ่งนี้ + ย้อนหลัง 7 วัน</p>
+        <div id="dailyLogList"><div class="loading">กำลังโหลด...</div></div>
       </div>
     </div>
-
-    <div id="lookupCardHolder"></div>
   </div>
 
 <script>
-const DEFAULT_API_URL = 'https://script.google.com/macros/s/AKfycbxqrfTAipQFjum4jBuPHVBALqpo1t_QrN9G60RV1VblmG877lWJB6Fc6VAIqjzxtAew/exec';
+  // ===== API config =====
+  // 1. Deploy Code.gs as a Web App (Anyone access) in Apps Script, copy the /exec URL below.
+  // 2. Set the SAME value here as the "API_TOKEN" Script Property in Apps Script
+  //    (Project Settings > Script Properties). This is what keeps random people
+  //    from hitting your API and editing your shop's data.
+  const API_BASE_URL = 'https://script.google.com/macros/s/AKfycbx6kmtOesR4Ij6Tisf5U03aFzQ_AQe9TtEBNiQiWNkzhKBo-wgZOTrp0MqSLFRSzzbD/exec';
+  const API_TOKEN = '0925452204Ing';
 
-const urlParam = new URLSearchParams(window.location.search).get('api');
-if (urlParam) {
-  localStorage.setItem('portfolio_api_url', urlParam);
-}
-let API_URL = urlParam || localStorage.getItem('portfolio_api_url') || DEFAULT_API_URL;
+  // Apps Script Web Apps don't work reliably here with either kind of POST:
+  // fetch()-based POST gets blocked because Apps Script doesn't send the
+  // CORS headers fetch() requires, and a hidden-iframe-form POST (the usual
+  // workaround) gets blocked with a 403 from Google. A <script src="..."> tag
+  // (JSONP) isn't subject to CORS at all and is the one approach that's
+  // actually reliable — so everything, reads AND writes, goes through GET.
 
-const savedTheme = localStorage.getItem('portfolio_theme');
-if (savedTheme) {
-  document.documentElement.setAttribute('data-theme', savedTheme);
-}
-function updateThemeIcon() {
-  const current = document.documentElement.getAttribute('data-theme');
-  const isDark = current === 'dark' ||
-    (!current && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  document.getElementById('themeToggleBtn').innerHTML = isDark ? '<i class="ti ti-sun"></i>' : '<i class="ti ti-moon"></i>';
-  document.getElementById('themeColorMeta').setAttribute('content', isDark ? '#121316' : '#FAF8F4');
-}
+  let jsonpCounter_ = 0;
 
-const state = {
-  port: 'ALL',
-  basis: 'AVG',
-  valueMode: 'market',
-  summary: null,
-  dashboard: null,
-  transactions: [],
-  ports: [],
-  history: [],
-  dcaInputs: {},
-  targetPriceInputs: {},
-  allocTargets: JSON.parse(localStorage.getItem('portfolio_alloc_targets') || '{}')
-};
+  // Core request function — every API call (read or write) goes through this.
+  function apiGet(action, extraParams){
+    return new Promise(function(resolve, reject){
+      const callbackName = 'apiJsonpCallback_' + (jsonpCounter_++) + '_' + Date.now();
+      const params = Object.assign({ action: action, token: API_TOKEN, callback: callbackName }, extraParams || {});
+      const qs = Object.keys(params)
+        .map(function(k){ return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]); })
+        .join('&');
 
-function saveAllocTargets() {
-  localStorage.setItem('portfolio_alloc_targets', JSON.stringify(state.allocTargets));
-}
+      const script = document.createElement('script');
+      let settled = false;
 
-const fmt = (n, decimals=2) => {
-  if (n === null || n === undefined || isNaN(n)) return '—';
-  return Number(n).toLocaleString('en-US', { minimumFractionDigits: decimals, maximumFractionDigits: decimals });
-};
-const fmtPct = (n) => {
-  if (n === null || n === undefined || isNaN(n)) return '—';
-  return (n * 100 >= 0 ? '+' : '') + (n * 100).toFixed(2) + '%';
-};
+      function cleanup(){
+        delete window[callbackName];
+        if (script.parentNode) script.parentNode.removeChild(script);
+      }
 
-function showSetupBanner(errorMsg) {
-  const el = document.getElementById('setupBanner');
-  el.innerHTML = `
-    <div class="setup-banner">
-      ${errorMsg ? '⚠️ ' + errorMsg + '<br><br>' : ''}วาง <strong>Web App URL</strong> จาก Apps Script ที่ deploy ไว้ที่นี่
-      (ลงท้ายด้วย <code>/exec</code>)
-      <div class="url-input-row">
-        <input type="text" id="apiUrlInput" placeholder="https://script.google.com/macros/s/xxxx/exec" value="${API_URL || ''}">
-        <button id="apiUrlClear" type="button" title="ลบลิงก์ที่บันทึกไว้ และกลับไปใช้ค่าเริ่มต้น">✕</button>
-      </div>
-      <button id="apiUrlSave">บันทึกและเชื่อมต่อ</button>
-      <div class="setup-hint">💡 หลังบันทึกแล้ว แนะนำให้ลบ icon บนหน้าจอโฮมเดิม แล้วทำ "Add to Home Screen" ใหม่อีกครั้ง เพื่อให้ icon จำ URL นี้ไว้แบบถาวร ไม่หายแม้ Safari จะล้างข้อมูลแอพที่ไม่ได้เปิดนาน ๆ</div>
-    </div>`;
-  document.getElementById('apiUrlSave').onclick = () => {
-    const val = document.getElementById('apiUrlInput').value.trim();
-    if (val) {
-      localStorage.setItem('portfolio_api_url', val);
-      API_URL = val;
-      const newUrl = new URL(window.location.href);
-      newUrl.searchParams.set('api', val);
-      history.replaceState(null, '', newUrl.toString());
-      el.innerHTML = '';
-      loadAll();
+      window[callbackName] = function(json){
+        settled = true;
+        cleanup();
+        if (!json.success) reject(new Error(json.error || 'เกิดข้อผิดพลาด'));
+        else resolve(json.data);
+      };
+
+      script.onerror = function(){
+        if (settled) return;
+        cleanup();
+        reject(new Error('เชื่อมต่อ API ไม่สำเร็จ (เช็ค API_BASE_URL ว่าใส่ถูกไหม)'));
+      };
+
+      script.src = API_BASE_URL + '?' + qs;
+      document.body.appendChild(script);
+    });
+  }
+
+  // Write actions (add/update/delete) also go through apiGet — the payload
+  // object just gets JSON-stringified into a "data" query param instead of
+  // a POST body. URLs have a practical length limit, so if a receipt photo
+  // would push the request over a safe size, it's dropped (with a heads-up)
+  // rather than silently failing the whole save.
+  function apiPost(action, payload){
+    payload = payload || {};
+    const params = {};
+    if (payload.rowIndex !== undefined) params.rowIndex = payload.rowIndex;
+    if (payload.name !== undefined) params.name = payload.name;
+
+    if (payload.data !== undefined){
+      let dataToSend = payload.data;
+      let dataJson = JSON.stringify(dataToSend);
+      if (dataJson.length > 6000 && dataToSend && dataToSend.receipt){
+        const stripped = Object.assign({}, dataToSend);
+        delete stripped.receipt;
+        dataJson = JSON.stringify(stripped);
+        alert('ไฟล์รูปบิลใหญ่เกินไปสำหรับการเชื่อมต่อแบบนี้ บันทึกรายการให้แล้วแต่ไม่ได้แนบรูป ลองใช้รูปที่มีขนาดเล็กลงครับ');
+      }
+      params.data = dataJson;
     }
-  };
-  document.getElementById('apiUrlClear').onclick = () => {
-    document.getElementById('apiUrlInput').value = '';
-    document.getElementById('apiUrlInput').focus();
-    localStorage.removeItem('portfolio_api_url');
-    const clearedUrl = new URL(window.location.href);
-    clearedUrl.searchParams.delete('api');
-    history.replaceState(null, '', clearedUrl.toString());
-  };
-}
 
-document.getElementById('settingsBtn').onclick = () => showSetupBanner();
-
-document.getElementById('refreshBtn').addEventListener('click', async () => {
-  const btn = document.getElementById('refreshBtn');
-  if (btn.disabled) return;
-  btn.disabled = true;
-  btn.classList.add('spinning');
-  try {
-    await loadAll();
-  } finally {
-    btn.classList.remove('spinning');
-    btn.disabled = false;
+    return apiGet(action, params);
   }
-});
 
-document.getElementById('themeToggleBtn').onclick = () => {
-  const current = document.documentElement.getAttribute('data-theme');
-  const isDark = current === 'dark' ||
-    (!current && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const next = isDark ? 'light' : 'dark';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('portfolio_theme', next);
-  updateThemeIcon();
-  renderHeroBgChart();
-  renderBarChart();
-};
+  let currentType = 'รายรับ';
+  let cachedData = null;
+  let editingRowIndex = null;
+  let pendingReceipt = null;      // {base64, mimeType, filename} for a newly chosen file
+  let existingReceiptUrl = '';    // current receipt url when editing
+  let removeReceiptFlag = false;  // true if user removed the existing receipt
 
-async function api(action, params = {}) {
-  const url = new URL(API_URL);
-  url.searchParams.set('action', action);
-  Object.entries(params).forEach(([k,v]) => { if (v !== null) url.searchParams.set(k, v); });
-  const res = await fetch(url.toString());
-  return res.json();
-}
+  let currentTab = 'finance';
+  let financeDataStale = false; // set true when daily-log actions change finance data behind the scenes
+  let cachedDailyLogs = null;
+  let editingDailyLogRowIndex = null;
+  let cachedMenuItems = [];
 
-async function apiPost(body) {
-  const res = await fetch(API_URL, {
-    method: 'POST',
-    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-    body: JSON.stringify(body)
-  });
-  return res.json();
-}
-
-async function loadAll() {
-  if (!API_URL) { showSetupBanner(); return; }
-
-  const ok = await loadOverview();
-  if (ok) {
-    loadRest(); // โหลดส่วนที่หนัก (ธุรกรรม/แดชบอร์ด/ประวัติ) แบบพื้นหลัง ไม่บล็อกการแสดงผลหน้าหลัก
+  function setType(type){
+    currentType = type;
+    document.getElementById('btnIncome').classList.toggle('active', type === 'รายรับ');
+    document.getElementById('btnExpense').classList.toggle('active', type === 'รายจ่าย');
   }
-}
 
-// เฟส 1: ข้อมูลที่จำเป็นสำหรับหน้าภาพรวมพอร์ตเท่านั้น (summary + ports + allocTargets)
-// เบากว่า all_data มาก เพราะไม่ต้องอ่านชีต Transactions ที่มีสูตร FIFO หนักๆ, Dashboard, และ History
-async function loadOverview() {
-  const MAX_ATTEMPTS = 3;
-  const RETRY_DELAY_MS = [1500, 3000];
+  function fmt(n){
+    return '฿' + Number(n).toLocaleString('th-TH', {minimumFractionDigits:0, maximumFractionDigits:2});
+  }
 
-  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    try {
-      const res = await api('overview', { port: state.port === 'ALL' ? null : state.port });
-      if (res.error) throw new Error(res.error);
+  function todayStr(){
+    return localDateStr_(new Date());
+  }
 
-      const { summary, ports, allocTargets: allocTargetsRes } = res;
-      if (summary.error || ports.error) {
-        throw new Error(summary.error || ports.error);
-      }
-      state.summary = summary;
-      state.ports = ports.ports || [];
-      if (allocTargetsRes && !allocTargetsRes.error) {
-        state.allocTargets = allocTargetsRes.targets || {};
-        saveAllocTargets();
-      }
-      renderPortSwitch();
-      renderHero();
-      renderBarChart();
-      renderAllocList();
-      populatePortSelect();
-      cacheSnapshot();
-      return true;
-    } catch (err) {
-      console.error(`loadOverview attempt ${attempt} failed:`, err);
-      if (attempt < MAX_ATTEMPTS) {
-        if (!state.summary) {
-          document.getElementById('allocList').innerHTML =
-            `<div class="empty-state"><div class="icon">⏳</div><div class="msg">กำลังเชื่อมต่อใหม่... (ครั้งที่ ${attempt + 1})</div></div>`;
+  // Formats a Date using the device's local date parts (not UTC),
+  // so "today" matches the phone's actual clock instead of shifting
+  // at UTC midnight (which is 7:00 AM Thai time).
+  function localDateStr_(d){
+    const y = d.getFullYear();
+    const m = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return y + '-' + m + '-' + day;
+  }
+
+  // extra safeguard: strip an accidental leading zero as the user types (e.g. "05" -> "5")
+  function stripLeadingZero(input){
+    const v = input.value;
+    if (v.length > 1 && v[0] === '0' && v[1] !== '.'){
+      input.value = v.replace(/^0+/, '') || '0';
+    }
+  }
+
+  // keeps the focused field visible above the on-screen keyboard (which otherwise
+  // covers the bottom of the form/modal on mobile). Retries a few times since the
+  // keyboard's open animation and the modal's own resize can both still be
+  // settling when focus first fires.
+  function scrollFieldIntoView(el){
+    [50, 250, 450].forEach(function(delay){
+      setTimeout(function(){
+        if (document.activeElement === el){
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
-        await new Promise(r => setTimeout(r, RETRY_DELAY_MS[attempt - 1]));
-        continue;
-      }
-      if (!state.summary) {
-        document.getElementById('allocList').innerHTML =
-          `<div class="empty-state"><div class="icon"><i class="ti ti-alert-triangle"></i></div><div class="msg">โหลดข้อมูลไม่สำเร็จ: ${err.message}<br><br>กดปุ่ม ⚙ ด้านบนเพื่อตรวจสอบ/แก้ไข URL</div></div>`;
-      }
-      showSetupBanner('เชื่อมต่อไม่สำเร็จ: ' + err.message + ' — ตรวจสอบว่า URL ถูกต้อง และตอน Deploy เลือก "Who has access: Anyone" แล้ว');
-      return false;
+      }, delay);
+    });
+  }
+
+  function loadData(){
+    document.getElementById('fDate').value = todayStr();
+    apiGet('getAllData').then(renderAll).catch(onError);
+  }
+
+  function onError(err){
+    document.getElementById('txList').innerHTML = '<div class="empty">โหลดข้อมูลไม่สำเร็จ: ' + err.message + '</div>';
+  }
+
+  let periodView = 'weekly';
+  let selectedCatMonth = null; // null = not yet chosen, defaults to latest month
+  let selectedTxWeek = null;   // null = not yet chosen, defaults to latest week
+
+  function renderAll(data){
+    cachedData = data;
+    const s = data.summary;
+    const net = s.netProfit;
+    const netEl = document.getElementById('netProfit');
+    netEl.textContent = fmt(net);
+    netEl.className = 'value ' + (net >= 0 ? 'pos' : 'neg');
+    document.getElementById('totalIncome').textContent = fmt(s.totalIncome);
+    document.getElementById('totalExpense').textContent = fmt(s.totalExpense);
+
+    renderCategories(data);
+    renderPeriods(data.periodSummary);
+    renderTxWeekOptions(data);
+  }
+
+  function renderTxWeekOptions(data){
+    const weeks = (data.periodSummary && data.periodSummary.weekly) || [];
+    const select = document.getElementById('txWeekSelect');
+
+    if (!weeks.length){
+      select.innerHTML = '<option value="all">ทั้งหมด</option>';
+      selectedTxWeek = 'all';
+      select.value = 'all';
+      renderTxListForWeek();
+      return;
     }
-  }
-  return false;
-}
 
-// เฟส 2: ข้อมูลที่หนักกว่า (ธุรกรรม/แดชบอร์ด/ประวัติ) โหลดแบบพื้นหลัง ไม่มี retry loop
-// ถ้าพลาดก็แค่ log ไว้เฉยๆ ไม่รบกวนหน้าภาพรวมที่แสดงผลไปแล้ว
-async function loadRest() {
-  try {
-    const res = await api('rest_data', { port: state.port === 'ALL' ? null : state.port });
-    if (res.error) throw new Error(res.error);
+    const options = weeks.map(function(w){ return '<option value="' + w.sortKey + '">สัปดาห์ ' + w.label + '</option>'; })
+      .concat(['<option value="all">ทั้งหมด</option>']);
+    select.innerHTML = options.join('');
 
-    const { dashboard, transactions: txns, history } = res;
-    if (dashboard.error || txns.error) {
-      throw new Error(dashboard.error || txns.error);
+    const validValues = weeks.map(function(w){ return w.sortKey; }).concat(['all']);
+    if (selectedTxWeek === null || validValues.indexOf(selectedTxWeek) === -1){
+      selectedTxWeek = weeks[0].sortKey; // latest week by default
     }
-    state.dashboard = dashboard;
-    state.transactions = txns.rows || [];
-    state.history = (history && history.rows) || [];
-
-    renderHero();
-    renderHeroBgChart();
-    renderTransactions();
-    cacheSnapshot();
-  } catch (err) {
-    console.error('loadRest failed:', err);
-  }
-}
-
-// เก็บ snapshot ล่าสุดไว้ใน localStorage เพื่อเปิดแอพครั้งถัดไปแล้วแสดงผลได้ทันที
-// (ไม่ต้องรอ network) แล้วค่อยรีเฟรชด้วยข้อมูลสดจาก server ทับอีกที
-const SNAPSHOT_KEY = 'portfolio_snapshot_v1';
-function cacheSnapshot() {
-  try {
-    localStorage.setItem(SNAPSHOT_KEY, JSON.stringify({
-      summary: state.summary,
-      dashboard: state.dashboard,
-      ports: state.ports,
-      transactions: state.transactions,
-      history: state.history,
-      ts: Date.now()
-    }));
-  } catch (err) {
-    console.error('cacheSnapshot failed:', err);
-  }
-}
-
-function renderFromSnapshot() {
-  try {
-    const raw = localStorage.getItem(SNAPSHOT_KEY);
-    if (!raw) return false;
-    const snap = JSON.parse(raw);
-    if (!snap || !snap.summary) return false;
-    state.summary = snap.summary;
-    state.dashboard = snap.dashboard;
-    state.ports = snap.ports || [];
-    state.transactions = snap.transactions || [];
-    state.history = snap.history || [];
-    renderPortSwitch();
-    renderHero();
-    renderHeroBgChart();
-    renderBarChart();
-    renderAllocList();
-    renderTransactions();
-    populatePortSelect();
-    return true;
-  } catch (err) {
-    console.error('renderFromSnapshot failed:', err);
-    return false;
-  }
-}
-
-function renderPortSwitch() {
-  const el = document.getElementById('portSwitch');
-  const ports = ['ALL', ...state.ports];
-  el.innerHTML = ports.map(p =>
-    `<div class="port-chip ${p === state.port ? 'active' : ''}" data-port="${p}">${p === 'ALL' ? 'ทั้งหมด' : p}</div>`
-  ).join('');
-  el.querySelectorAll('.port-chip').forEach(chip => {
-    chip.onclick = () => {
-      state.port = chip.dataset.port;
-      loadAll();
-    };
-  });
-}
-
-function rerenderForBasisOrPort() {
-  renderHero();
-  renderAllocList();
-  renderBarChart();
-}
-
-const THAI_PORT = 'set100'; // ชื่อพอร์ตหุ้นไทย ใช้สกุลเงินบาท (฿) แยกจากพอร์ตอื่นที่เป็น USD ทั้งหมด
-
-// เทียบชื่อพอร์ตแบบไม่สนตัวพิมพ์เล็ก-ใหญ่ (กัน "SET100" vs "set100" ไม่ตรงกันจนกรองไม่ออก)
-function isThaiPortName(portName) {
-  return String(portName || '').trim().toLowerCase() === THAI_PORT.toLowerCase();
-}
-
-function isThaiPortSelected() {
-  return isThaiPortName(state.port);
-}
-
-function currencySymbol() {
-  return isThaiPortSelected() ? '฿' : '$';
-}
-
-function getFilteredSummaryRows() {
-  if (!state.summary) return [];
-  const rows = state.summary.rows.filter(r => r['หุ้น'] !== 'USD');
-  if (state.port === 'ALL') return rows.filter(r => !isThaiPortName(r['ชื่อ port'])); // ตัดพอร์ตไทยออกจากยอดรวม เพราะสกุลเงินคนละหน่วยกัน (บาท vs ดอลลาร์) รวมกันไม่ได้
-  return rows.filter(r => r['ชื่อ port'] === state.port);
-}
-
-function getCashBalance() {
-  if (!state.summary) return 0;
-  return state.summary.rows
-    .filter(r => r['หุ้น'] === 'USD')
-    .reduce((sum, r) => sum + (Number(r['มูลค่าปัจจุบัน']) || 0), 0);
-}
-
-// เงินต้น = ยอดเงินที่ฝากเข้าพอร์ตทั้งหมด (ผลรวมรายการ "ซื้อ USD" ไม่หักลบกับยอดถอน)
-// ดึงจาก state.summary (คำนวณฝั่ง backend แบบไม่กรอง port) เพื่อไม่ให้ค่าหายตอนสลับดูเฉพาะบางพอร์ต
-function getPrincipalBalance() {
-  if (!state.summary) return 0;
-  return state.summary.rows
-    .filter(r => r['หุ้น'] === 'USD')
-    .reduce((sum, r) => sum + (Number(r['เงินฝากรวม']) || 0), 0);
-}
-
-// ยอดเงินที่ถอนออกจากพอร์ตสะสมทั้งหมด (ผลรวมรายการ "ขาย USD" ทุกครั้งที่เคยบันทึกไว้)
-function getWithdrawnBalance() {
-  if (!state.summary) return 0;
-  return state.summary.rows
-    .filter(r => r['หุ้น'] === 'USD')
-    .reduce((sum, r) => sum + (Number(r['เงินถอนสะสม']) || 0), 0);
-}
-
-function renderHero() {
-  const rows = getFilteredSummaryRows();
-  const isThai = isThaiPortSelected();
-  const sym = currencySymbol();
-  let marketValue = 0, costValue = 0;
-
-  rows.forEach(r => {
-    marketValue += Number(r['มูลค่าปัจจุบัน']) || 0;
-    costValue += Number(r['ทุน  FIFO']) || 0;
-  });
-
-  // เงินสด/เงินต้น เป็น USD เสมอ (คนละสกุลกับพอร์ตหุ้นไทย) จะไม่รวมเข้ากับมูลค่าพอร์ตไทยเลย
-  const cashBalance = isThai ? 0 : getCashBalance();
-
-  document.getElementById('heroLabel').textContent = isThai
-    ? 'Current Value (THB) · มูลค่าปัจจุบัน (บาท)'
-    : 'Current Value · มูลค่าปัจจุบัน';
-
-  const totalValueForHero = marketValue + cashBalance;
-  const valStr = fmt(totalValueForHero, 2);
-  const [intPart, decPart] = valStr.split('.');
-  document.getElementById('heroValue').innerHTML =
-    `${sym}${intPart}<span class="cents">.${decPart || '00'}</span>`;
-  // มูลค่าหุ้น (ตัวใหญ่) สีเขียว/แดงตามกำไรขาดทุนเทียบกับต้นทุน
-  const stockGain = marketValue - costValue;
-  document.getElementById('footStockValue').textContent = `${sym}${fmt(marketValue)}`;
-  document.getElementById('footStockValue').style.color = stockGain >= 0 ? 'var(--hero-gain-text)' : 'var(--hero-loss-text)';
-
-  // เงินสดคงเหลือ (USD) แสดงแยกต่างหาก ไม่ปนกับ Cost Basis / กำไรขาดทุน
-  // เช็คว่าข้อมูลโหลดแล้วหรือยัง (state.summary) แทนการเช็คค่าตรงๆ เพราะถ้าเงินสด = 0 พอดี
-  // การเช็คแบบ if (cashBalance) จะถือว่า 0 เป็น falsy แล้วซ่อนแถวไปเลย ทำให้ดูเหมือนข้อมูลหาย
-  // ซ่อนแถวนี้ไปเลยตอนดูพอร์ตไทย เพราะเงินสดเป็น USD คนละสกุลกับพอร์ตไทย ไม่เกี่ยวข้องกัน
-  const cashRowEl = document.getElementById('heroCashRow');
-  if (state.summary && !isThai) {
-    cashRowEl.style.display = 'flex';
-    document.getElementById('heroCashValue').textContent = `$${fmt(cashBalance)}`;
-  } else {
-    cashRowEl.style.display = 'none';
+    select.value = selectedTxWeek;
+    renderTxListForWeek();
   }
 
-  // แถว "มูลค่ารวม" เดิมถูกลบออก เพราะตอนนี้ตัวเลขใหญ่ด้านบน (heroValue) รวมเงินสดเข้าไปแล้วโดยตรง
-  const totalRowEl = document.getElementById('heroTotalRow');
-  if (totalRowEl) totalRowEl.style.display = 'none';
+  function renderTxListForWeek(){
+    if (!cachedData) return;
+    const select = document.getElementById('txWeekSelect');
+    selectedTxWeek = select.value;
 
-  // เงินต้น (สุทธิ) = เงินฝากทั้งหมด - เงินที่ถอนออกไปแล้ว (เป็น USD เสมอ ซ่อนไปเลยตอนดูพอร์ตไทย)
-  const grossDeposited = getPrincipalBalance();
-  const withdrawnBalance = getWithdrawnBalance();
-  const netPrincipal = grossDeposited - withdrawnBalance;
+    const items = (selectedTxWeek === 'all')
+      ? cachedData.transactions
+      : cachedData.transactions.filter(function(tx){ return tx.weekKey === selectedTxWeek; });
 
-  const principalRowEl = document.getElementById('heroPrincipalRow');
-  if (state.summary && !isThai) {
-    principalRowEl.style.display = 'flex';
-    document.getElementById('heroPrincipalValue').textContent = `$${fmt(netPrincipal)}`;
-  } else {
-    principalRowEl.style.display = 'none';
+    renderTxList(items);
   }
 
-  const deltaEl = document.getElementById('heroDelta');
-  // นำการปรับแสดงผลเป็น inline-flex ออกเพื่อให้ซ่อนไว้ตาม CSS เริ่มต้น (display:none)
-  deltaEl.style.display = 'none';
-
-  // กำไร/ขาดทุน = มูลค่าตลาด - ต้นทุน (costValue) เสมอ ไม่ว่าจะสลับโหมดแสดงผลเป็นราคาตลาดหรือต้นทุนก็ตาม
-  const profit = marketValue - costValue;
-  const profitPct = costValue ? profit / costValue : 0;
-  document.getElementById('footProfitLabel').textContent = 'Unrealized P/L';
-  document.getElementById('footProfit').textContent = `${profit>=0?'+':''}${sym}${fmt(profit)} (${fmtPct(profitPct)})`;
-  document.getElementById('footProfit').style.color = profit >= 0 ? 'var(--hero-gain-text)' : 'var(--hero-loss-text)';
-  deltaEl.className = 'hero-delta ' + (profit >= 0 ? 'up' : 'down');
-  deltaEl.textContent = `${profit>=0?'▲':'▼'} ${fmtPct(profitPct)}`;
-
-  // เทียบ "มูลค่าสดตอนนี้" กับ "ค่าปิดของวันทำการก่อนหน้าล่าสุดที่บันทึกไว้" เสมอ
-  // (ไม่ใช้ค่า Daily Change/% ที่ trigger บันทึกไว้ตรงๆ เพราะนิ่ง ไม่ใช่ราคา ณ ตอนที่เปิดดู)
-  const now = new Date();
-  const isWeekend = now.getDay() === 0 || now.getDay() === 6; // 0 = อาทิตย์, 6 = เสาร์ (ตลาดปิด)
-  const todayStr = now.toDateString();
-
-  const allValueEntries = state.history
-    .filter(h => h['Date'] && h['มูลค่าพอร์ต'] != null)
-    .sort((a, b) => new Date(a['Date']) - new Date(b['Date']));
-
-  const heroDailyEl = document.getElementById('heroDaily');
-  const yesterdaySmallEl = document.getElementById('heroYesterdaySmall');
-
-  let currentForDaily = null, baselineValue = null;
-  if (isThai) {
-    // History (มูลค่าพอร์ต/มูลค่าหุ้น) เป็น USD เท่านั้น เทียบกับพอร์ตไทย (บาท) ไม่ได้ ซ่อน Day Change ไปเลย
-  } else if (isWeekend) {
-    // เสาร์-อาทิตย์ ตลาดปิด: ค้างค่า Day Change ของวันศุกร์ (วันทำการล่าสุด) ไว้ ไม่คำนวณจากราคาสดที่อาจนิ่ง/คลาดเคลื่อนช่วงตลาดปิด
-    if (allValueEntries.length >= 2) {
-      currentForDaily = Number(allValueEntries[allValueEntries.length - 1]['มูลค่าพอร์ต']) || 0;
-      baselineValue = Number(allValueEntries[allValueEntries.length - 2]['มูลค่าพอร์ต']) || 0;
-    }
-  } else {
-    // วันทำการปกติ: เทียบมูลค่าสดตอนนี้กับวันทำการก่อนหน้าล่าสุดที่ไม่ใช่วันนี้
-    const priorDayEntries = allValueEntries.filter(h => new Date(h['Date']).toDateString() !== todayStr);
-    if (priorDayEntries.length > 0) {
-      currentForDaily = totalValueForHero;
-      baselineValue = Number(priorDayEntries[priorDayEntries.length - 1]['มูลค่าพอร์ต']) || 0;
-    }
+  function setPeriodView(view){
+    periodView = view;
+    document.getElementById('btnWeekly').classList.toggle('active', view === 'weekly');
+    document.getElementById('btnWeekly').classList.toggle('neutral', view === 'weekly');
+    document.getElementById('btnMonthly').classList.toggle('active', view === 'monthly');
+    document.getElementById('btnMonthly').classList.toggle('neutral', view === 'monthly');
+    if (cachedData) renderPeriods(cachedData.periodSummary);
   }
 
-  if (currentForDaily !== null && baselineValue !== null) {
-    const dailyChange = currentForDaily - baselineValue;
-    const dailyPct = baselineValue ? dailyChange / baselineValue : 0;
-    const dailyUp = dailyChange >= 0;
-
-    heroDailyEl.style.display = 'block';
-    heroDailyEl.className = 'hero-daily ' + (dailyUp ? 'up' : 'down');
-    heroDailyEl.innerHTML = `Day Change <b>${dailyUp?'▲':'▼'} ${dailyUp?'+':''}${sym}${fmt(dailyChange)} (${fmtPct(dailyPct)})</b> <span class="hero-yesterday-inline">${sym}${fmt(baselineValue)}</span>`;
-
-    yesterdaySmallEl.style.display = 'none';
-  } else {
-    heroDailyEl.style.display = 'none';
-    yesterdaySmallEl.style.display = 'none';
-  }
-
-  // ต้นทุน (sub-line เล็กใต้มูลค่าหุ้น) — ไม่ต้องโชว์ % เปลี่ยนแปลงแล้ว เพราะดูจาก Day Change ในการ์ดใหญ่ด้านบนได้อยู่แล้ว
-  const footCostSubEl = document.getElementById('footCostSub');
-  if (footCostSubEl) {
-    footCostSubEl.innerHTML = `ต้นทุน ${sym}${fmt(costValue)}`;
-  }
-}
-
-function renderHeroBgChart() {
-  const svg = document.getElementById('heroBgChart');
-  if (!svg) return;
-  const data = state.history.filter(h => h['Date'] && h['มูลค่าพอร์ต'] != null);
-  if (data.length < 2) { svg.innerHTML = ''; return; }
-
-  const W = 400, H = 200;
-  const values = data.map(d => Number(d['มูลค่าพอร์ต']));
-  
-  // ตรวจสอบการเปลี่ยนแปลงจากวันแรกถึงวันล่าสุดเพื่อกำหนดสี
-  const isUp = values[values.length - 1] >= values[values.length - 2]
-  
-  // ใช้ตัวแปรสีจาก CSS Variable หรือกำหนดค่าสีที่ต้องการ
-  // ตรวจสอบ Theme เพื่อให้สีสวยงามเข้ากับระบบ
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-    (!document.documentElement.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  
-  // กำหนดสีตามเงื่อนไข
-  const lineColor = isUp ? (isDark ? '#3DBE7C' : '#1B7A4D') : (isDark ? '#E8645A' : '#B23B2E');
-  const gradRGB = isUp ? (isDark ? '61,190,124' : '27,122,77') : (isDark ? '232,100,90' : '178,59,46');
-  const gradStart = `rgba(${gradRGB},0.60)`;
-  const gradMid = `rgba(${gradRGB},0.30)`;
-
-  const min = Math.min(...values), max = Math.max(...values);
-  const range = (max - min) || 1;
-  const xStep = W / (data.length - 1);
-  const points = values.map((v, i) => [i * xStep, (1 - (v - min) / range) * H]);
-
-  const pathD = points.map((p, i) => (i === 0 ? 'M' : 'L') + p[0].toFixed(1) + ',' + p[1].toFixed(1)).join(' ');
-  const areaD = pathD + ` L${points[points.length-1][0].toFixed(1)},${H} L${points[0][0].toFixed(1)},${H} Z`;
-
-  svg.innerHTML = `
-    <defs>
-      <linearGradient id="heroBgGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="${gradStart}" stop-opacity="1"/>
-        <stop offset="45%" stop-color="${gradMid}" stop-opacity="1"/>
-        <stop offset="100%" stop-color="transparent" stop-opacity="0"/>
-      </linearGradient>
-    </defs>
-    <path d="${areaD}" fill="url(#heroBgGrad)" stroke="none"/>
-    <path d="${pathD}" fill="none" stroke="${lineColor}" stroke-width="3"/>
-  `;
-}
-
-
-const CHART_COLORS = ['#D9A655','#378ADD','#7F77DD','#5DCAA5','#D85A30','#ED93B1','#888780','#3DBE7C','#F5A623','#9B59B6'];
-
-let _donutInstance = null;
-let _plInstance = null;
-
-function renderBarChart() {
-  // ตรวจสอบความพร้อมของ Chart.js ก่อนเรียกใช้งาน เพื่อป้องกัน Error บล็อกส่วนอื่นกรณีเน็ตช้ามากๆ
-  if (typeof Chart === 'undefined') {
-    setTimeout(renderBarChart, 200);
-    return;
-  }
-  renderDonutChart();
-  renderPLChart();
-}
-
-async function renderDonutChart() {
-  const card = document.getElementById('donutChartCard');
-  if (!card) return;
-  const rows = getFilteredSummaryRows();
-  if (!rows.length) {
-    card.innerHTML = `<div class="empty-state" style="padding:24px;"><div class="msg">ยังไม่มีหุ้นให้แสดงสัดส่วน</div></div>`;
-    return;
-  }
-  const basis = state.basis;
-
-  const sorted = [...rows].sort((a,b) => (Number(b['มูลค่าปัจจุบัน'])||0) - (Number(a['มูลค่าปัจจุบัน'])||0));
-  const stockTotal = sorted.reduce((s,r) => s + (Number(r['มูลค่าปัจจุบัน'])||0), 0);
-  const isThai = isThaiPortSelected();
-  const cashBalance = isThai ? 0 : getCashBalance(); // เงินสดเป็น USD เสมอ ไม่รวมเข้าสัดส่วนตอนดูพอร์ตไทย (คนละสกุลเงิน)
-
-  // รวมเงินสดเข้าไปเป็นอีกชิ้นหนึ่งของสัดส่วนด้วย
-  const items = sorted.map(r => ({
-    ticker: r['หุ้น'],
-    value: Number(r['มูลค่าปัจจุบัน']) || 0,
-    plPct: (basis === 'AVG' ? Number(r['กำไร% AVG']) : Number(r['กำไร% FIFO'])) * 100,
-    isCash: false
-  }));
-  if (cashBalance > 0) {
-    items.push({ ticker: 'Cash', value: cashBalance, plPct: 0, isCash: true });
-  }
-
-  const total = stockTotal + (cashBalance > 0 ? cashBalance : 0) || 1;
-  const tickers = items.map(it => it.ticker);
-  const pcts = items.map(it => parseFloat((it.value / total * 100).toFixed(1)));
-  // สีเดิม: เขียวถ้ากำไร แดงถ้าขาดทุน (ไม่ไล่เฉด) ยกเว้นเงินสดใช้สีขาว
-  const gainColor = '#1B7A4D';
-  const lossColor = '#B23B2E';
-  const goldColor = '#D4AF37';
-  const colors = items.map(it => it.isCash ? '#FFFFFF' : (it.ticker === 'XAU' ? goldColor : (it.plPct >= 0 ? gainColor : lossColor)));
-
-  card.innerHTML = `<div style="position:relative;height:340px;">
-    <canvas id="donutCanvas" role="img"
-      aria-label="Pie chart showing portfolio allocation: ${tickers.map((t,i)=>`${t} ${pcts[i]}%`).join(', ')}"></canvas>
-  </div>`;
-
-  if (_donutInstance) { _donutInstance.destroy(); _donutInstance = null; }
-  const ctx = document.getElementById('donutCanvas');
-  if (!ctx) return;
-
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-    (!document.documentElement.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-
-  _donutInstance = new Chart(ctx.getContext('2d'), {
-    type: 'doughnut',
-    data: {
-      labels: tickers,
-      datasets: [{
-        data: pcts,
-        backgroundColor: colors,
-        borderColor: isDark ? '#14161A' : '#fff',
-        borderWidth: 2
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      cutout: '46%',
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${tickers[ctx.dataIndex]} — ${pcts[ctx.dataIndex]}%`
-          }
-        },
-        datalabels: { display: false }
-      },
-      layout: { padding: 10 }
-    },
-    plugins: [{
-      id: 'insideSliceLabels',
-      afterDraw(chart) {
-        const { ctx } = chart;
-        const meta = chart.getDatasetMeta(0);
-        meta.data.forEach((arc, i) => {
-          const pct = pcts[i];
-          if (pct < 4) return; // ชิ้นเล็กเกินไปใส่ตัวหนังสือไม่พอ ข้ามไปเพื่อไม่ให้ทับกัน
-          const angle = (arc.startAngle + arc.endAngle) / 2;
-          const r = (arc.innerRadius + arc.outerRadius) / 2;
-          const x = arc.x + Math.cos(angle) * r;
-          const y = arc.y + Math.sin(angle) * r;
-          ctx.save();
-          ctx.fillStyle = colors[i] === '#FFFFFF' ? '#1A1A1A' : '#fff';
-          ctx.font = 'bold 12px -apple-system, sans-serif';
-          ctx.textAlign = 'center';
-          ctx.textBaseline = 'middle';
-          ctx.shadowColor = colors[i] === '#FFFFFF' ? 'transparent' : 'rgba(0,0,0,0.35)';
-          ctx.shadowBlur = 3;
-          ctx.fillText(tickers[i], x, y - 7);
-          ctx.font = '10.5px -apple-system, sans-serif';
-          ctx.fillText(`${pct}%`, x, y + 8);
-          ctx.restore();
-        });
-      }
-    }]
-  });
-}
-
-function renderPLChart() {
-  const card = document.getElementById('barChartCard');
-  if (!card) return;
-  const rows = getFilteredSummaryRows();
-  if (!rows.length) {
-    card.innerHTML = `<div class="empty-state" style="padding:24px;"><div class="msg">ยังไม่มีข้อมูลกำไร/ขาดทุน</div></div>`;
-    return;
-  }
-  const basis = state.basis;
-  const sym = currencySymbol();
-
-  const withData = rows.map(r => ({
-    ticker: r['หุ้น'],
-    value:  Number(r['มูลค่าปัจจุบัน']) || 0,
-    plPct:  parseFloat(((basis === 'AVG' ? Number(r['กำไร% AVG']) : Number(r['กำไร% FIFO'])) * 100).toFixed(2))
-  })).sort((a,b) => a.plPct - b.plPct)
-
-  const tickers   = withData.map(r => r.ticker);
-  const values    = withData.map(r => r.value);
-  const plPcts    = withData.map(r => r.plPct);
-
-  // ใช้ชุดสีของ dark theme เสมอสำหรับกราฟแท่ง ไม่สลับไปใช้ light theme
-  // ยกเว้นสีตัวหนังสือชื่อหุ้น (tickColor) ให้ปรับตามธีมจริงของหน้าเว็บ เพื่อให้อ่านออกชัดเจนบนพื้นหลังการ์ดของ light theme
-  const isDark = document.documentElement.getAttribute('data-theme') === 'dark' ||
-    (!document.documentElement.getAttribute('data-theme') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-  const tickColor = isDark ? '#ECE9E2' : '#0E1116';
-  const gridColor = 'rgba(255,255,255,0.07)';
-  const axisColor = '#8B92A0';
-  const gainColor = '#3DBE7C';
-  const lossColor = '#E8645A';
-  const goldColor = '#D4AF37';
-  const gainSoft = '#145e34';
-  const lossSoft = '#a82713';
-  const goldSoft = '#B8860B';
-
-
-  card.innerHTML = `<div style="position:relative;height:230px;">
-    <canvas id="plCanvas" role="img"
-      aria-label="Bar chart of current market value per stock with P&L% label: ${tickers.map((t,i)=>`${t} ${sym}${values[i].toLocaleString()} ${plPcts[i]>=0?'+':''}${plPcts[i]}%`).join(', ')}"></canvas>
-  </div>`;
-
-  if (_plInstance) { _plInstance.destroy(); _plInstance = null; }
-  const ctx = document.getElementById('plCanvas');
-  if (!ctx) return;
-
-  _plInstance = new Chart(ctx.getContext('2d'), {
-    type: 'bar',
-    data: {
-      labels: tickers,
-      datasets: [{
-        data: values,
-        backgroundColor: tickers.map((t,i) => t === 'XAU' ? goldSoft : (plPcts[i] >= 0 ? gainSoft : lossSoft)),
-        borderRadius: 4,
-        borderSkipped: false,
-        barThickness: 20
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: { display: false },
-        tooltip: {
-          callbacks: {
-            label: ctx => ` ${sym}${fmt(ctx.raw)} · ${plPcts[ctx.dataIndex] >= 0 ? '+' : ''}${plPcts[ctx.dataIndex]}%`
-          }
-        }
-      },
-      layout: { padding: { top: 25, bottom: 25 } },
-      scales: {
-        x: {
-          grid: { display: false },
-          border: { display: false },
-          ticks: { color: tickColor, font: { size: 11, weight: 'bold', family: 'monospace' } }
-        },
-        y: {
-          grid: { color: gridColor },
-          border: { display: false },
-          ticks: {
-            color: axisColor,
-            font: { size: 10 },
-            callback: v => '$' + (v >= 1000 ? (v/1000).toFixed(0)+'k' : v)
-          }
-        }
-      }
-    },
-    plugins: [{
-      id: 'plCostCap',
-      afterDatasetDraw(chart) {
-        const { ctx: c } = chart;
-        chart.getDatasetMeta(0).data.forEach((bar, i) => {
-          const pct = plPcts[i];
-          const barTop = bar.y;
-          const barBottom = bar.base;
-          const barLeft = bar.x - bar.width / 2;
-          const barHeight = barBottom - barTop;
-          const capHeight = Math.min(barHeight * 0.4, Math.max(6, Math.abs(pct) * 1.4));
-          const radius = 4;
-          c.save();
-          c.fillStyle = tickers[i] === 'XAU' ? goldColor : (pct >= 0 ? gainColor : lossColor);
-          c.beginPath();
-          if (pct >= 0) {
-            c.roundRect(barLeft, barTop, bar.width, capHeight, [radius, radius, 0, 0]);
-          } else {
-            c.roundRect(barLeft, barBottom - capHeight, bar.width, capHeight, [0, 0, radius, radius]);
-          }
-          c.fill();
-          c.restore();
-        });
-      }
-    }, {
-      id: 'plValueLabels',
-      afterDatasetDraw(chart) {
-        const { ctx: c } = chart;
-        chart.getDatasetMeta(0).data.forEach((bar, i) => {
-          const pct = plPcts[i];
-          const label = (pct >= 0 ? '+' : '') + pct.toFixed(2) + '%';
-          
-          c.save();
-          c.font = 'bold 11px -apple-system, monospace, sans-serif';
-          c.textAlign = 'center';
-
-          if (pct >= 0) {
-            c.save();
-            c.translate(bar.x, bar.y + 24);
-            c.rotate(Math.PI / 2);
-            c.textAlign = "center";
-            c.textBaseline = "middle";
-            c.fillStyle = "#ffffff";
-            c.fillText(label, 0, 0);
-            c.restore();
-          } else {
-            c.save();
-            c.translate(bar.x, bar.base - 22);
-            c.rotate(-Math.PI / 2);
-            c.textAlign = "center";
-            c.textBaseline = "middle";
-            c.fillStyle = "#ffffff";
-            c.fillText(label, 0, 0);
-            c.restore();
-          }
-        });
-      }
-    }]
-  });
-}
-
-function updateAllocTargetSumBar() {
-  const bar = document.getElementById('allocTargetSumBar');
-  if (!bar) return;
-  const targets = Object.values(state.allocTargets);
-  if (!targets.length) {
-    bar.innerHTML = '';
-    return;
-  }
-  const sum = targets.reduce((s, v) => s + (Number(v) || 0), 0);
-  const diff = sum - 100;
-  let statusHtml;
-  let normalizeBtnHtml = '';
-  if (Math.abs(diff) < 0.05) {
-    statusHtml = `<span class="alloc-sum-status ontarget">✓ ครบ 100% พอดี</span>`;
-  } else if (diff > 0) {
-    statusHtml = `<span class="alloc-sum-status over">เกิน 100% ไป ${fmt(diff,1)}%</span>`;
-    normalizeBtnHtml = `<button class="alloc-normalize-btn" id="normalizeTargetsBtn"><i class="ti ti-adjustments-horizontal"></i> ปรับให้รวม 100%</button>`;
-  } else {
-    statusHtml = `<span class="alloc-sum-status under">ขาดอีก ${fmt(Math.abs(diff),1)}% ถึง 100%</span>`;
-  }
-  bar.innerHTML = `
-    <div class="alloc-sum-bar">
-      <span class="alloc-sum-label">เป้าหมายรวมทั้งหมด: <b>${fmt(sum,1)}%</b></span>
-      <div style="display:flex;align-items:center;gap:8px;">
-        ${statusHtml}
-        ${normalizeBtnHtml}
-      </div>
-    </div>`;
-
-  const normalizeBtn = document.getElementById('normalizeTargetsBtn');
-  if (normalizeBtn) {
-    normalizeBtn.onclick = () => {
-      const allTickers = Object.keys(state.allocTargets);
-      const sum = allTickers.reduce((s, t) => s + (Number(state.allocTargets[t]) || 0), 0);
-
-      if (!allTickers.length || sum <= 0) {
-        alert('ยังไม่มีเป้าหมายให้ปรับ');
-        return;
-      }
-
-      const ok = confirm('ปรับเป้าหมายทุกตัวให้รวมกันเป็น 100% พอดี (ลดทุกตัวตามสัดส่วนเดิม) ใช่ไหม?');
-      if (!ok) return;
-
-      const scale = 100 / sum;
-      allTickers.forEach(ticker => {
-        state.allocTargets[ticker] = Math.round(state.allocTargets[ticker] * scale * 100) / 100;
-      });
-      saveAllocTargets();
-      saveAllocTargetsToServer();
-      renderAllocList();
-    };
-  }
-}
-
-function renderAllocList() {
-  const el = document.getElementById('allocList');
-  const rows = getFilteredSummaryRows();
-  if (!rows.length) {
-    el.innerHTML = `<div class="empty-state"><div class="icon">📊</div><div class="msg">ยังไม่มีหุ้นให้แสดงสัดส่วน</div></div>`;
-    updateAllocTargetSumBar();
-    return;
-  }
-  const basis = state.basis;
-  const sym = currencySymbol();
-  const sorted = [...rows].sort((a,b) => (Number(b['มูลค่าปัจจุบัน'])||0) - (Number(a['มูลค่าปัจจุบัน'])||0));
-  const total = sorted.reduce((s,r) => s + (Number(r['มูลค่าปัจจุบัน'])||0), 0) || 1;
-
-  el.innerHTML = sorted.map((r, i) => {
-    const value = Number(r['มูลค่าปัจจุบัน']) || 0;
-    const pct = (value / total) * 100;
-    const profit = basis === 'AVG' ? Number(r['กำไร AVG']) : Number(r['กำไร FIFO']);
-    const profitPct = basis === 'AVG' ? Number(r['กำไร% AVG']) : Number(r['กำไร% FIFO']);
-    const up = profit >= 0;
-    const color = CHART_COLORS[i % CHART_COLORS.length];
-    const ticker = r['หุ้น'];
-    const currentPrice = Number(r['price']) || 0;
-    const avgCostPerShare = Number(r['ราคา FIFO']) || 0;
-    const totalCostBasis = Number(r['ทุน  FIFO']) || 0;
-    const inputVal = state.dcaInputs[ticker] || '';
-    const targetPriceInputVal = state.targetPriceInputs[ticker] || '';
-    const targetVal = state.allocTargets[ticker];
-    const hasTarget = targetVal !== undefined;
-
-    return `
-      <div class="alloc-row-wrap">
-        <button class="target-price-toggle-btn target-price-toggle-btn-top" data-ticker="${ticker}">
-          <i class="ti ti-target-arrow"></i> เป้าหมายราคา · คาดกำไร/ขาดทุน
-          <i class="ti ti-chevron-down dca-toggle-chevron"></i>
-        </button>
-        <div class="dca-calc" id="targetPriceCalc-${ticker}" style="display:none">
-          <div class="dca-calc-input-row">
-            <span class="dca-calc-label">ราคาเป้าหมาย ${sym}</span>
-            <input type="number" class="target-price-input" data-ticker="${ticker}" placeholder="${currentPrice ? fmt(currentPrice) : '0'}" inputmode="decimal" value="${targetPriceInputVal}">
-          </div>
-          <div class="dca-calc-result" id="targetPriceResult-${ticker}">${renderTargetPriceResultHtml(r, targetPriceInputVal, sym)}</div>
-        </div>
-
-        <div class="alloc-row">
-          <div class="alloc-icon">
-            <img src="https://eodhd.com/img/logos/US/${ticker}.png" alt="${ticker}" loading="lazy"
-                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="alloc-icon-fallback" style="display:none;background:${color}">${ticker.charAt(0)}</div>
-          </div>
-          <div class="alloc-mid">
-            <div class="alloc-ticker-row">
-              <div class="alloc-ticker">${ticker}</div>
-              <div class="alloc-current-price">${sym}${fmt(currentPrice)}</div>
-            </div>
-            <div class="alloc-cost-row ${avgCostPerShare === 0 ? '' : (avgCostPerShare < currentPrice ? 'cost-below' : (avgCostPerShare > currentPrice ? 'cost-above' : 'cost-equal'))}">ต้นทุน ${sym}${fmt(avgCostPerShare)}/หุ้น</div>
-          </div>
-          <div class="alloc-right">
-            <div class="alloc-value">${sym}${fmt(value)}</div>
-            <div class="alloc-gain ${up?'up':'down'}">${up?'+':''}${sym}${fmt(profit)} (${fmtPct(profitPct)})</div>
-            <div class="alloc-cost-total">ทุนรวม ${sym}${fmt(totalCostBasis)}</div>
-          </div>
-        </div>
-
-        <div class="alloc-target-block">
-          <div class="alloc-target-summary" style="display:${hasTarget ? 'block' : 'none'};">
-            ${hasTarget ? renderTargetRoomBarHtml(pct, targetVal, ticker) : ''}
-          </div>
-
-          <div class="alloc-no-target" style="display:${hasTarget ? 'none' : 'block'};">
-            <div class="alloc-bar-track">
-              <div class="alloc-bar-fill" style="width:${pct.toFixed(1)}%;background:${color}"></div>
-            </div>
-            <div class="alloc-pct-row">
-              <span class="alloc-pct">${pct.toFixed(1)}% ของพอร์ต</span>
-              <button class="alloc-target-add-btn" data-ticker="${ticker}">+ ตั้งเป้าหมาย</button>
-            </div>
-          </div>
-
-          <div class="alloc-target-input-row" id="targetInputRow-${ticker}" style="display:none;">
-            <span class="dca-calc-label">เป้าหมายสัดส่วน</span>
-            <input type="number" class="alloc-target-input" data-ticker="${ticker}" placeholder="เช่น 20" inputmode="decimal" min="0" max="100" value="${hasTarget ? targetVal : ''}">
-            <span class="dca-calc-suffix">%</span>
-            <button class="alloc-target-save-btn" data-ticker="${ticker}">✓</button>
-          </div>
-        </div>
-
-        <button class="dca-toggle-btn" data-ticker="${ticker}">
-          <i class="ti ti-calculator"></i> DCA คำนวณเพิ่ม
-          <i class="ti ti-chevron-down dca-toggle-chevron"></i>
-        </button>
-        <div class="dca-calc" id="dcaCalc-${ticker}" style="display:none">
-          <div class="dca-calc-input-row">
-            <span class="dca-calc-label">DCA ลงเพิ่ม ${sym}</span>
-            <input type="number" class="dca-calc-input" data-ticker="${ticker}" placeholder="0" inputmode="decimal" value="${inputVal}">
-          </div>
-          <div class="dca-calc-result" id="dcaResult-${ticker}">${renderDcaResultHtml(r, inputVal, total, sym)}</div>
-        </div>
-      </div>`;
-  }).join('');
-
-  updateAllocTargetSumBar();
-
-  // ปิดช่องคำนวณอื่นๆ ที่เปิดค้างอยู่ทั้งหมด (ทั้ง DCA และเป้าหมายราคา ทุกหุ้น) ก่อนเปิดอันใหม่
-  function closeAllCalcPanels() {
-    el.querySelectorAll('.dca-calc').forEach(panel => { panel.style.display = 'none'; });
-    el.querySelectorAll('.dca-toggle-btn, .target-price-toggle-btn').forEach(b => b.classList.remove('open'));
-  }
-
-  el.querySelectorAll('.dca-toggle-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const ticker = btn.dataset.ticker;
-      const calcEl = document.getElementById(`dcaCalc-${ticker}`);
-      const isOpen = calcEl.style.display !== 'none';
-      closeAllCalcPanels();
-      if (!isOpen) {
-        calcEl.style.display = 'block';
-        btn.classList.add('open');
-        const inputEl = calcEl.querySelector('.dca-calc-input');
-        if (inputEl) {
-          inputEl.focus();
-          inputEl.select();
-        }
-      }
-    });
-  });
-
-  el.querySelectorAll('.target-price-toggle-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const ticker = btn.dataset.ticker;
-      const calcEl = document.getElementById(`targetPriceCalc-${ticker}`);
-      const isOpen = calcEl.style.display !== 'none';
-      closeAllCalcPanels();
-      if (!isOpen) {
-        calcEl.style.display = 'block';
-        btn.classList.add('open');
-        const inputEl = calcEl.querySelector('.target-price-input');
-        if (inputEl) {
-          inputEl.focus();
-          inputEl.select();
-        }
-      }
-    });
-  });
-
-  el.querySelectorAll('.target-price-input').forEach(input => {
-    input.addEventListener('input', (e) => {
-      const ticker = e.target.dataset.ticker;
-      const val = e.target.value;
-      state.targetPriceInputs[ticker] = val;
-      const row = sorted.find(r => r['หุ้น'] === ticker);
-      const resultEl = document.getElementById(`targetPriceResult-${ticker}`);
-      if (resultEl && row) resultEl.innerHTML = renderTargetPriceResultHtml(row, val, sym);
-    });
-  });
-
-  el.querySelectorAll('.dca-calc-input').forEach(input => {
-    input.addEventListener('input', (e) => {
-      const ticker = e.target.dataset.ticker;
-      const val = e.target.value;
-      state.dcaInputs[ticker] = val;
-      const row = sorted.find(r => r['หุ้น'] === ticker);
-      const resultEl = document.getElementById(`dcaResult-${ticker}`);
-      if (resultEl && row) resultEl.innerHTML = renderDcaResultHtml(row, val, total, sym);
-    });
-  });
-
-  el.querySelectorAll('.alloc-target-add-btn, .alloc-target-edit-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const ticker = btn.dataset.ticker;
-      const inputRow = document.getElementById(`targetInputRow-${ticker}`);
-      if (inputRow) {
-        inputRow.style.display = 'flex';
-        const input = inputRow.querySelector('.alloc-target-input');
-        if (input) { input.focus(); input.select(); }
-      }
-    });
-  });
-
-  el.querySelectorAll('.alloc-target-input').forEach(input => {
-    input.addEventListener('input', (e) => {
-      const ticker = e.target.dataset.ticker;
-      const val = e.target.value;
-      if (val === '') {
-        delete state.allocTargets[ticker];
-      } else {
-        state.allocTargets[ticker] = Math.max(0, Math.min(100, Number(val)));
-      }
-      saveAllocTargets();
-      updateAllocTargetSumBar();
-    });
-  });
-  el.querySelectorAll('.alloc-target-input').forEach(input => {
-    input.addEventListener('blur', () => {
-      renderAllocList();
-      saveAllocTargetsToServer();
-    });
-  });
-  el.querySelectorAll('.alloc-target-save-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      renderAllocList();
-      saveAllocTargetsToServer();
-    });
-  });
-}
-
-let allocTargetsSaveTimer = null;
-function saveAllocTargetsToServer() {
-  clearTimeout(allocTargetsSaveTimer);
-  allocTargetsSaveTimer = setTimeout(async () => {
-    try {
-      await apiPost({ endpoint: 'saveAllocTargets', targets: state.allocTargets });
-    } catch (err) {
-      console.error('saveAllocTargetsToServer failed:', err);
-    }
-  }, 400);
-}
-
-function getRoomColor(ratio) {
-  const clamped = Math.min(Math.max(ratio, 0), 1);
-  const hue = 140 * (1 - clamped);
-  return `hsl(${hue}, 65%, 45%)`;
-}
-
-function renderTargetRoomBarHtml(actualPct, targetPct, ticker) {
-  const ratio = targetPct > 0 ? actualPct / targetPct : 0;
-  const barWidth = Math.min(ratio, 1) * 100;
-  const overTarget = ratio > 1;
-  const color = overTarget ? '#D9483B' : getRoomColor(ratio);
-
-  return `
-    <div class="alloc-target-summary-text">
-      ปัจจุบัน <b>${fmt(actualPct,1)}%</b>&nbsp;·&nbsp;เป้าหมาย <b>${fmt(targetPct,1)}%</b>
-    </div>
-    <div class="alloc-room-bar-track">
-      <div class="alloc-room-bar-fill" style="width:${barWidth.toFixed(1)}%;background:${color}"></div>
-    </div>
-    <div class="alloc-target-footer-row">
-      ${overTarget ? `<span class="alloc-target-over-label">⚠ เกินเป้าหมายแล้ว</span>` : `<span class="alloc-target-room-label">เหลือที่ลงทุนได้อีก ${fmt(Math.max(0,targetPct-actualPct),2)}%</span>`}
-      <button class="alloc-target-edit-btn" data-ticker="${ticker}">✏️ แก้ไข</button>
-    </div>
-  `;
-}
-
-function renderTargetCompareHtml(actualPct, targetPct) {
-  if (targetPct === undefined || targetPct === null) return '';
-  const diff = actualPct - targetPct;
-  if (Math.abs(diff) < 0.5) {
-    return `<span class="alloc-target-compare ontarget">✓ ตรงเป้า (${fmt(targetPct,0)}%)</span>`;
-  }
-  if (diff > 0) {
-    return `<span class="alloc-target-compare over">เกินเป้า +${fmt(diff,1)}%</span>`;
-  }
-  return `<span class="alloc-target-compare under">ต่ำกว่าเป้า ${fmt(diff,1)}%</span>`;
-}
-
-function renderDcaResultHtml(row, amountStr, totalPortfolioValue, sym) {
-  sym = sym || '$';
-  const currentPrice = Number(row['price']) || 0;
-  const currentShares = Number(row['จำนวนหุ้น']) || 0;
-  const currentAvgCost = Number(row['ราคา FIFO']) || 0;
-  const currentValue = Number(row['มูลค่าปัจจุบัน']) || 0;
-  const ticker = row['หุ้น'];
-  const targetVal = state.allocTargets[ticker];
-  const currentLine = `<div class="dca-current">ราคาที่ได้ปัจจุบัน: <b>${sym}${fmt(currentAvgCost)}</b></div>`;
-
-  const amount = Number(amountStr);
-  if (!amountStr || isNaN(amount) || amount <= 0) {
-    return `${currentLine}<span class="dca-calc-hint">พิมพ์จำนวนเงินเพื่อดูค่าเฉลี่ยต้นทุนและสัดส่วนใหม่</span>`;
-  }
-  if (currentPrice <= 0) {
-    return `${currentLine}<span class="dca-calc-hint">ไม่มีราคาปัจจุบันสำหรับคำนวณ</span>`;
-  }
-
-  const newShares = amount / currentPrice;
-  const newAvgCost = (currentShares * currentAvgCost + amount) / (currentShares + newShares);
-  const diff = currentAvgCost - newAvgCost;
-  const diffPct = currentAvgCost ? diff / currentAvgCost : 0;
-  const isDrop = diff > 0;
-
-  let allocLine = '';
-  if (totalPortfolioValue) {
-    const currentPct = (currentValue / totalPortfolioValue) * 100;
-    const newValue = currentValue + amount;
-    const newTotal = totalPortfolioValue + amount;
-    const newPct = (newValue / newTotal) * 100;
-    allocLine = `
-      <div class="dca-alloc-projection">
-        สัดส่วนใหม่: <b>${fmt(newPct,2)}%</b> (จาก ${fmt(currentPct,2)}%)
-        ${targetVal !== undefined ? renderTargetCompareHtml(newPct, targetVal) : ''}
-      </div>`;
-  }
-
-  return `
-    ${currentLine}
-    ต้นทุนเฉลี่ยใหม่: <b>${sym}${fmt(newAvgCost)}</b>
-    <span class="dca-calc-drop ${isDrop?'down':'up'}">
-      ${isDrop ? '↓ ลดลง' : '↑ เพิ่มขึ้น'} ${sym}${fmt(Math.abs(diff))} (${fmtPct(Math.abs(diffPct))})
-    </span>
-    ${allocLine}
-  `;
-}
-
-function renderTargetPriceResultHtml(row, priceStr, sym) {
-  sym = sym || '$';
-  const currentPrice = Number(row['price']) || 0;
-  const currentShares = Number(row['จำนวนหุ้น']) || 0;
-  const currentAvgCost = Number(row['ราคา FIFO']) || 0;
-  const currentLine = `<div class="dca-current">ต้นทุนเฉลี่ยปัจจุบัน: <b>${sym}${fmt(currentAvgCost)}</b> · ถืออยู่ <b>${fmt(currentShares,4)}</b> หุ้น</div>`;
-
-  const targetPrice = Number(priceStr);
-  if (!priceStr || isNaN(targetPrice) || targetPrice <= 0) {
-    return `${currentLine}<span class="dca-calc-hint">พิมพ์ราคาเป้าหมายเพื่อดูกำไร/ขาดทุนถ้าขายที่ราคานี้</span>`;
-  }
-  if (currentShares <= 0) {
-    return `${currentLine}<span class="dca-calc-hint">ยังไม่มีหุ้นที่ถืออยู่สำหรับคำนวณ</span>`;
-  }
-
-  // กำไร/ขาดทุนถ้าขายทั้งหมดที่ราคาเป้าหมายนี้ (เทียบกับต้นทุนเฉลี่ย FIFO)
-  const estProfit = (targetPrice - currentAvgCost) * currentShares;
-  const estProfitPct = currentAvgCost ? (targetPrice - currentAvgCost) / currentAvgCost : 0;
-  const isGain = estProfit >= 0;
-
-  // ราคาต้องขึ้น/ลงอีกกี่ % จากราคาปัจจุบันถึงจะถึงเป้าหมายนี้
-  const moveNeeded = currentPrice ? (targetPrice - currentPrice) / currentPrice : 0;
-  const moveDirection = moveNeeded >= 0 ? 'ขึ้นอีก' : 'ลงอีก';
-
-  return `
-    ${currentLine}
-    ถ้าขายที่ <b>${sym}${fmt(targetPrice)}</b> จะได้:
-    <span class="dca-calc-drop ${isGain?'gain':'loss'}">
-      ${isGain ? '↑ กำไร' : '↓ ขาดทุน'} ${sym}${fmt(Math.abs(estProfit))} (${fmtPct(Math.abs(estProfitPct))})
-    </span>
-    <div class="dca-alloc-projection">
-      ราคาต้อง${moveDirection} ${fmtPct(Math.abs(moveNeeded))} จากราคาปัจจุบัน (${sym}${fmt(currentPrice)})
-    </div>
-  `;
-}
-
-function renderTransactions() {
-  const el = document.getElementById('txnList');
-  const txns = state.transactions.filter(t => t['รายการ']).slice(0, 40);
-  if (!txns.length) {
-    el.innerHTML = `<div class="empty-state"><div class="icon"><i class="ti ti-clipboard-list"></i></div><div class="msg">ยังไม่มีรายการ</div></div>`;
-    return;
-  }
-
-  const getTxnDateRaw = (t) => t['_date'] || t['Date'] || null;
-  const groups = [];
-  let currentKey = null;
-  txns.forEach(t => {
-    const raw = getTxnDateRaw(t);
-    const d = raw ? new Date(raw) : null;
-    const validDate = d && !isNaN(d.getTime()) ? d : null;
-    const key = validDate ? validDate.toDateString() : 'ไม่ระบุวันที่';
-    if (key !== currentKey) {
-      groups.push({ key, date: validDate, items: [] });
-      currentKey = key;
-    }
-    groups[groups.length - 1].items.push(t);
-  });
-
-  el.innerHTML = groups.map(g => {
-    const dateLabel = g.date
-      ? g.date.toLocaleDateString('th-TH', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' })
-      : 'ไม่ระบุวันที่';
-    const rowsHtml = g.items.map(t => {
-      const isBuy = t['action'] === 'ซื้อ';
-      const rawDate = getTxnDateRaw(t);
-      const parsedDate = rawDate ? new Date(rawDate) : null;
-      const shortDate = (parsedDate && !isNaN(parsedDate.getTime()))
-        ? parsedDate.toLocaleDateString('th-TH', { day: 'numeric', month: 'short' })
-        : 'ไม่ระบุวันที่';
-      const fifoPL = Number(t['FIFO P/L']) || 0;
-      const txnSym = isThaiPortName(t['Port']) ? '฿' : '$';
-      const plHtml = fifoPL !== 0
-        ? `<div class="txn-pl ${fifoPL >= 0 ? 'gain' : 'loss'}">${fifoPL >= 0 ? '+' : ''}${txnSym}${fmt(fifoPL)}</div>`
-        : '';
-      return `
-        <div class="txn-row">
-          <div class="txn-badge ${isBuy?'buy':'sell'}">${isBuy?'B':'S'}</div>
-          <div class="txn-mid">
-            <div class="txn-stock">${t['รายการ']}</div>
-            <div class="txn-date">${shortDate} · ${t['Port']}</div>
-          </div>
-          <div class="txn-right">
-            <div class="txn-amount">${txnSym}${fmt(t['รวม $'])}</div>
-            <div class="txn-shares">@ ${txnSym}${fmt(t['ราคา'])}</div>
-            ${plHtml}
-          </div>
-          <button class="txn-edit" data-row="${t['_row']}" title="แก้ไขรายการนี้"><i class="ti ti-pencil"></i></button>
-          <button class="txn-delete" data-row="${t['_row']}" data-stock="${t['รายการ']}" title="ลบรายการนี้"><i class="ti ti-trash"></i></button>
-        </div>`;
+  function renderPeriods(periodSummary){
+    const el = document.getElementById('periodList');
+    if (!periodSummary){ el.innerHTML = '<div class="empty">ยังไม่มีข้อมูล</div>'; return; }
+    const items = periodSummary[periodView] || [];
+    if (!items.length){ el.innerHTML = '<div class="empty">ยังไม่มีข้อมูล</div>'; return; }
+
+    el.innerHTML = items.map(function(p){
+      const total = p.income + p.expense;
+      const incPct = total ? (p.income / total) * 100 : 0;
+      const expPct = total ? (p.expense / total) * 100 : 0;
+      const profitCls = p.profit >= 0 ? 'pos' : 'neg';
+      const profitSign = p.profit >= 0 ? '+' : '';
+      return '<div class="period-item">' +
+        '<div class="period-top">' +
+          '<span class="period-label">' + p.label + '</span>' +
+          '<span class="period-profit ' + profitCls + '">' + profitSign + fmt(p.profit) + '</span>' +
+        '</div>' +
+        '<div class="period-bars">' +
+          '<span class="inc-bar" style="width:' + incPct + '%"></span>' +
+          '<span class="exp-bar" style="width:' + expPct + '%"></span>' +
+        '</div>' +
+        '<div class="period-meta">' +
+          '<span>รับ ' + fmt(p.income) + '</span>' +
+          '<span>จ่าย ' + fmt(p.expense) + '</span>' +
+        '</div>' +
+      '</div>';
     }).join('');
-    return `
-      <div class="txn-date-group">
-        <div class="txn-date-header">${dateLabel}</div>
-        ${rowsHtml}
-      </div>`;
-  }).join('');
+  }
 
-  el.querySelectorAll('.txn-edit').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const row = Number(btn.dataset.row);
-      const t = state.transactions.find(tx => Number(tx['_row']) === row);
-      if (!t) { alert('ไม่พบรายการนี้ (ข้อมูลอาจไม่ตรงกันชั่วคราว ลองรีเฟรชแล้วลองใหม่)'); return; }
-      openEditSheet(t);
-    });
-  });
+  function renderCategories(data){
+    const catCard = document.getElementById('catCard');
+    const s = data.summary;
+    const byMonth = data.categoryByMonth || [];
 
-  el.querySelectorAll('.txn-delete').forEach(btn => {
-    btn.addEventListener('click', async () => {
-      const row = btn.dataset.row;
-      const stock = btn.dataset.stock;
-      const confirmed = confirm(`ลบรายการ ${stock} นี้ออกจาก Sheet เลยไหม? การลบนี้ย้อนกลับไม่ได้`);
-      if (!confirmed) return;
+    if (!Object.keys(s.categoryBreakdown || {}).length){
+      catCard.style.display = 'none';
+      return;
+    }
+    catCard.style.display = 'block';
 
-      btn.disabled = true;
-      btn.innerHTML = '<i class="ti ti-loader-2"></i>';
-      try {
-        const result = await apiPost({ endpoint: 'deleteTransaction', row: row, stock: stock });
-        if (result.success) {
-          loadAll();
-        } else {
-          alert(result.error || 'ลบไม่สำเร็จ');
-          btn.disabled = false;
-          btn.innerHTML = '<i class="ti ti-trash"></i>';
-        }
-      } catch (err) {
-        alert('เชื่อมต่อไม่สำเร็จ: ' + err.message);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="ti ti-trash"></i>';
+    const select = document.getElementById('catMonthSelect');
+    const options = ['<option value="all">ทั้งหมด (ทุกช่วงเวลา)</option>']
+      .concat(byMonth.map(function(m){ return '<option value="' + m.sortKey + '">' + m.label + '</option>'; }));
+    select.innerHTML = options.join('');
+
+    // keep current selection if still valid; otherwise default to the latest month (or 'all' if no data)
+    const validValues = ['all'].concat(byMonth.map(function(m){ return m.sortKey; }));
+    if (selectedCatMonth === null || validValues.indexOf(selectedCatMonth) === -1) {
+      selectedCatMonth = byMonth.length ? byMonth[0].sortKey : 'all';
+    }
+    select.value = selectedCatMonth;
+
+    renderCategoriesForMonth();
+  }
+
+  function renderCategoriesForMonth(){
+    if (!cachedData) return;
+    const select = document.getElementById('catMonthSelect');
+    selectedCatMonth = select.value;
+
+    let breakdown, total;
+    if (selectedCatMonth === 'all'){
+      breakdown = cachedData.summary.categoryBreakdown;
+      total = cachedData.summary.totalExpense;
+    } else {
+      const monthData = (cachedData.categoryByMonth || []).find(function(m){ return m.sortKey === selectedCatMonth; });
+      breakdown = monthData ? monthData.categories : {};
+      total = Object.values(breakdown).reduce(function(sum, v){ return sum + v; }, 0);
+    }
+
+    const keys = Object.keys(breakdown || {});
+    const el = document.getElementById('catList');
+    if (!keys.length){ el.innerHTML = '<div class="empty">ไม่มีรายจ่ายในช่วงนี้</div>'; return; }
+
+    const sorted = keys.sort(function(a,b){ return breakdown[b] - breakdown[a]; });
+    el.innerHTML = sorted.map(function(cat){
+      const pct = total ? Math.round((breakdown[cat] / total) * 100) : 0;
+      return '<div class="cat-row"><span>' + cat + '</span>' +
+        '<span class="bar"><span class="bar-fill" style="width:' + pct + '%"></span></span>' +
+        '<span>' + fmt(breakdown[cat]) + '</span></div>';
+    }).join('');
+  }
+
+  function renderTxList(items){
+    const el = document.getElementById('txList');
+    if (!items.length){ el.innerHTML = '<div class="empty">ไม่มีรายการในช่วงนี้</div>'; return; }
+    el.innerHTML = items.slice(0, 50).map(tx => {
+      const cls = tx.type === 'รายรับ' ? 'income' : 'expense';
+      const sign = tx.type === 'รายรับ' ? '+' : '-';
+      return '<div class="tx-item">' +
+        '<div class="tx-main">' +
+          '<div class="tx-desc">' + escapeHtml(tx.category) + '</div>' +
+          '<div class="tx-meta">' + tx.date + (tx.description ? ' · ' + escapeHtml(tx.description) : '') + '</div>' +
+          (tx.receiptUrl ? '<a class="tx-receipt" href="' + tx.receiptUrl + '" target="_blank">📎 ดูใบเสร็จ</a>' : '') +
+        '</div>' +
+        '<div class="tx-amt ' + cls + '">' + sign + fmt(tx.amount) + '</div>' +
+        '<button class="tx-edit" onclick="editTx(' + tx.rowIndex + ')">✎</button>' +
+        '<button class="tx-del" onclick="deleteTx(' + tx.rowIndex + ')">✕</button>' +
+      '</div>';
+    }).join('');
+  }
+
+  function escapeHtml(str){
+    const d = document.createElement('div');
+    d.textContent = str || '';
+    return d.innerHTML;
+  }
+
+  function submitTx(){
+    const date = document.getElementById('fDate').value;
+    const category = document.getElementById('fCategory').value.trim();
+    const description = document.getElementById('fDesc').value.trim();
+    const amount = document.getElementById('fAmount').value;
+
+    if (!date || !category || !amount || Number(amount) <= 0){
+      alert('กรอกวันที่ หมวดหมู่ และจำนวนเงินให้ครบก่อนนะครับ');
+      return;
+    }
+
+    const data = { date, type: currentType, category, description, amount };
+    if (pendingReceipt) data.receipt = pendingReceipt;
+
+    if (editingRowIndex !== null){
+      data.existingReceiptUrl = existingReceiptUrl;
+      data.removeReceipt = removeReceiptFlag;
+      apiPost('updateTransaction', { rowIndex: editingRowIndex, data: data }).then(function(){
+        cancelEdit();
+        loadData();
+      }).catch(onError);
+    } else {
+      apiPost('addTransaction', { data: data }).then(function(){
+        document.getElementById('fCategory').value = '';
+        document.getElementById('fDesc').value = '';
+        document.getElementById('fAmount').value = '';
+        clearPendingReceipt();
+        loadData();
+      }).catch(onError);
+    }
+  }
+
+  function onReceiptChosen(){
+    const input = document.getElementById('fReceipt');
+    const file = input.files[0];
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024){
+      alert('ไฟล์ใหญ่เกินไป กรุณาเลือกไฟล์ไม่เกิน 5MB');
+      input.value = '';
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = function(e){
+      const base64 = e.target.result.split(',')[1];
+      pendingReceipt = { base64: base64, mimeType: file.type || 'application/octet-stream', filename: file.name };
+      removeReceiptFlag = false;
+      renderReceiptPreview();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function renderReceiptPreview(){
+    const el = document.getElementById('receiptPreview');
+    if (pendingReceipt){
+      el.style.display = 'flex';
+      el.innerHTML = '<span>📎 ' + escapeHtml(pendingReceipt.filename) + '</span>' +
+        '<button type="button" onclick="clearPendingReceipt()">ยกเลิก</button>';
+    } else if (existingReceiptUrl){
+      el.style.display = 'flex';
+      el.innerHTML = '<a href="' + existingReceiptUrl + '" target="_blank">📎 ดูใบเสร็จเดิม</a>' +
+        '<button type="button" onclick="removeExistingReceipt()">ลบ</button>';
+    } else {
+      el.style.display = 'none';
+      el.innerHTML = '';
+    }
+  }
+
+  function clearPendingReceipt(){
+    pendingReceipt = null;
+    document.getElementById('fReceipt').value = '';
+    renderReceiptPreview();
+  }
+
+  function removeExistingReceipt(){
+    existingReceiptUrl = '';
+    removeReceiptFlag = true;
+    renderReceiptPreview();
+  }
+
+  function editTx(rowIndex){
+    if (!cachedData) return;
+    const tx = cachedData.transactions.find(function(t){ return t.rowIndex === rowIndex; });
+    if (!tx) return;
+
+    editingRowIndex = rowIndex;
+    setType(tx.type);
+    document.getElementById('fDate').value = tx.date;
+    document.getElementById('fCategory').value = tx.category;
+    document.getElementById('fDesc').value = tx.description;
+    document.getElementById('fAmount').value = tx.amount;
+
+    pendingReceipt = null;
+    removeReceiptFlag = false;
+    existingReceiptUrl = tx.receiptUrl || '';
+    document.getElementById('fReceipt').value = '';
+    renderReceiptPreview();
+
+    document.getElementById('formTitle').textContent = 'แก้ไขรายการ';
+    document.getElementById('submitBtn').textContent = 'บันทึกการแก้ไข';
+    document.getElementById('cancelBtn').style.display = 'block';
+    openAccordion('addTxBody');
+    document.querySelector('.card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function cancelEdit(){
+    editingRowIndex = null;
+    document.getElementById('fCategory').value = '';
+    document.getElementById('fDesc').value = '';
+    document.getElementById('fAmount').value = '';
+    document.getElementById('fDate').value = todayStr();
+    document.getElementById('formTitle').textContent = 'เพิ่มรายการ';
+    document.getElementById('submitBtn').textContent = 'บันทึกรายการ';
+    document.getElementById('cancelBtn').style.display = 'none';
+
+    pendingReceipt = null;
+    removeReceiptFlag = false;
+    existingReceiptUrl = '';
+    document.getElementById('fReceipt').value = '';
+    renderReceiptPreview();
+  }
+
+  function deleteTx(rowIndex){
+    if (!confirm('ลบรายการนี้?')) return;
+    apiPost('deleteTransaction', { rowIndex: rowIndex }).then(loadData).catch(onError);
+  }
+
+  // ===== Tab switching =====
+  function switchTab(tab){
+    currentTab = tab;
+    document.getElementById('tabFinance').classList.toggle('active', tab === 'finance');
+    document.getElementById('tabFinance').classList.toggle('neutral', tab === 'finance');
+    document.getElementById('tabDailyLog').classList.toggle('active', tab === 'dailylog');
+    document.getElementById('tabDailyLog').classList.toggle('neutral', tab === 'dailylog');
+    document.getElementById('financeView').style.display = (tab === 'finance') ? 'block' : 'none';
+    document.getElementById('dailyLogView').style.display = (tab === 'dailylog') ? 'block' : 'none';
+    if (tab === 'dailylog' && cachedDailyLogs === null) loadDailyLogs();
+    if (tab === 'finance' && financeDataStale) { financeDataStale = false; loadData(); }
+    try { localStorage.setItem('sanSandwichTab', tab); } catch (e) {}
+  }
+
+  // ===== Daily log (บันทึกประจำวัน) =====
+  function loadDailyLogs(){
+    document.getElementById('dlDate').value = todayStr();
+    apiGet('getDailyLogs').then(function(logs){
+      renderDailyLogs(logs);
+      return loadMenuItems(); // sequenced after, not fired at the same time
+    }).catch(onDailyLogError);
+  }
+
+  function onDailyLogError(err){
+    document.getElementById('dailyLogList').innerHTML = '<div class="empty">โหลดข้อมูลไม่สำเร็จ: ' + err.message + '</div>';
+  }
+
+  function renderDailyLogs(logs){
+    cachedDailyLogs = logs;
+    const el = document.getElementById('dailyLogList');
+
+    const byDate = {};
+    logs.forEach(function(log){ byDate[log.date] = log; });
+
+    const dates = getUpcomingAndRecentDates_(7); // tomorrow, then today, then 6 days back
+    el.innerHTML = dates.map(function(dateStr){
+      const log = byDate[dateStr];
+      const isToday = dateStr === todayStr();
+      const isTomorrow = dateStr === tomorrowStr();
+      const dateLabel = dateStr + (isToday ? ' (วันนี้)' : isTomorrow ? ' (พรุ่งนี้)' : '');
+
+      if (!log){
+        return '<div class="dl-item">' +
+          '<div class="dl-top">' +
+            '<span class="dl-date">' + dateLabel + '</span>' +
+            '<div class="dl-actions">' +
+              '<button onclick="addDailyLogForDate(\'' + dateStr + '\')">+ เพิ่ม</button>' +
+            '</div>' +
+          '</div>' +
+          '<div class="empty" style="padding:4px 0;">ยังไม่มีบันทึก</div>' +
+        '</div>';
       }
-    });
-  });
-}
 
-function populatePortSelect() {
-  const sel = document.getElementById('fPort');
-  // เรียง "1 St" ไว้อันดับแรกเสมอ กันลืมสลับจาก "เงินต้น" ตอนจะบันทึกซื้อ/ขายหุ้น
-  const sortedPorts = [...state.ports].sort((a, b) => {
-    if (a === '1 St') return -1;
-    if (b === '1 St') return 1;
-    return 0;
-  });
-  sel.innerHTML = sortedPorts.map(p => `<option value="${p}">${p}</option>`).join('');
-  if (sortedPorts.includes('1 St')) sel.value = '1 St';
-}
-
-document.getElementById('basisToggle').addEventListener('click', (e) => {
-  const btn = e.target.closest('.basis-btn-inline');
-  if (!btn) return;
-  document.querySelectorAll('.basis-btn-inline').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  state.basis = btn.dataset.basis;
-  renderAllocList();
-});
-
-document.getElementById('editCashBtn').addEventListener('click', async () => {
-  const currentText = document.getElementById('heroCashValue').textContent.replace(/[^0-9.\-]/g, '');
-  const input = prompt('ใส่ยอดเงินสดจริงล่าสุดในพอร์ต (USD):', currentText || '0');
-  if (input === null) return; // ผู้ใช้กดยกเลิก
-
-  const amount = Number(input);
-  if (isNaN(amount)) {
-    alert('กรุณาใส่ตัวเลขที่ถูกต้อง');
-    return;
+      const totalMoney = log.transfer + log.cash;
+      const menuTotal_ = function(v){ return (v && typeof v === 'object') ? ((v.normal||0) + (v.mini||0)) : (v || 0); };
+      const menuNames = Object.keys(log.menuBreakdown || {})
+        .sort(function(a, b){ return menuTotal_(log.menuBreakdown[b]) - menuTotal_(log.menuBreakdown[a]); });
+      const menuLine = menuNames.length
+        ? '<div class="dl-menu">🍱 ' + menuNames.map(function(n){
+            const v = log.menuBreakdown[n];
+            if (v && typeof v === 'object'){
+              const normal = v.normal || 0;
+              const mini = v.mini || 0;
+              return escapeHtml(n) + ' ' + normal + (mini ? ' (มินิ ' + mini + ')' : '');
+            }
+            return escapeHtml(n) + ' ' + v;
+          }).join(', ') + '</div>'
+        : '';
+      return '<div class="dl-item">' +
+        '<div class="dl-top">' +
+          '<span class="dl-date">' + dateLabel + '</span>' +
+          '<div class="dl-actions">' +
+            '<button onclick="editDailyLog(' + log.rowIndex + ')">✎</button>' +
+            '<button onclick="deleteDailyLogRow(' + log.rowIndex + ')">✕</button>' +
+          '</div>' +
+        '</div>' +
+        menuLine +
+        '<div class="dl-grid">' +
+          '<span>ทำ <b>' + log.made + '</b> กล่อง</span>' +
+          '<span>ขายได้ <b>' + log.sold + '</b> กล่อง</span>' +
+          '<span>เหลือ <b>' + log.remaining + '</b> กล่อง</span>' +
+          '<span>เอาไป <b>' + log.takenAway + '</b> กล่อง</span>' +
+          '<span>โอน <b>' + fmt(log.transfer) + '</b></span>' +
+          '<span>สด <b>' + fmt(log.cash) + '</b></span>' +
+          '<span>เงินทอน <b>' + fmt(log.basketCash) + '</b></span>' +
+          '<span>รวมเงิน <b>' + fmt(totalMoney) + '</b></span>' +
+        '</div>' +
+      '</div>';
+    }).join('');
   }
 
-  const btn = document.getElementById('editCashBtn');
-  const originalIcon = btn.innerHTML;
-  btn.disabled = true;
-  btn.innerHTML = '<i class="ti ti-loader-2"></i>';
+  function getLastNDates_(n){
+    const dates = [];
+    const today = new Date();
+    for (let i = 0; i < n; i++){
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      dates.push(localDateStr_(d));
+    }
+    return dates;
+  }
+
+  function tomorrowStr(){
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return localDateStr_(d);
+  }
+
+  // tomorrow first (so it's easy to pre-plan the next day), then today, then daysBack days before it
+  function getUpcomingAndRecentDates_(daysBack){
+    return [tomorrowStr()].concat(getLastNDates_(daysBack));
+  }
+
+  function addDailyLogForDate(dateStr){
+    cancelDailyLogEdit();
+    document.getElementById('dlDate').value = dateStr;
+    openAccordion('dlFormBody');
+    document.querySelector('#dailyLogView .card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  // auto-calc: เหลือ = ทำ - ขายได้ | รวมเงิน = ขายได้ × 25 | เงินสด = รวมเงิน - เงินโอน
+  function recalcDailyLog(){
+    const made = parseFloat(document.getElementById('dlMade').value) || 0;
+    const sold = parseFloat(document.getElementById('dlSold').value) || 0;
+    const transfer = parseFloat(document.getElementById('dlTransfer').value) || 0;
+
+    const remaining = made - sold;
+    document.getElementById('dlRemaining').value = remaining;
+
+    const totalMoney = sold * 25; // รวมเงิน (ยอดขายที่ควรได้รับทั้งหมด)
+    const cash = totalMoney - transfer;
+    document.getElementById('dlCash').value = cash;
+  }
+
+  // ===== Menu items (เมนูที่จะทำวันนี้) =====
+  function loadMenuItems(){
+    apiGet('getMenuItems').then(function(items){
+      cachedMenuItems = items;
+      renderMenuItemList({}); // no saved quantities yet (fresh form / today)
+    }).catch(function(err){
+      document.getElementById('menuItemList').innerHTML = '<div class="empty">โหลดเมนูไม่สำเร็จ: ' + err.message + '</div>';
+    });
+  }
+
+  function renderMenuItemList(quantities){
+    quantities = quantities || {};
+    const el = document.getElementById('menuItemList');
+    if (!cachedMenuItems.length){
+      el.innerHTML = '<div class="empty">ยังไม่มีเมนู เพิ่มเมนูแรกได้ด้านล่าง</div>';
+      updateMenuTotal();
+      return;
+    }
+    el.innerHTML = cachedMenuItems.map(function(name){
+      // backward-compatible: older saved entries were a plain number (no size split)
+      const raw = quantities[name];
+      const normal = (raw && typeof raw === 'object') ? (raw.normal || 0) : (raw || 0);
+      const mini = (raw && typeof raw === 'object') ? (raw.mini || 0) : 0;
+      const safeName = name.replace(/'/g, "\\'");
+      return '<div class="menu-row">' +
+        '<div class="menu-row-top">' +
+          '<span class="menu-row-name">' + escapeHtml(name) + '</span>' +
+          '<button type="button" class="menu-row-del" onclick="removeMenuItemUI(\'' + safeName + '\')">✕</button>' +
+        '</div>' +
+        '<div class="menu-row-sizes">' +
+          menuSizeGroupHtml_(name, safeName, 'normal', 'ปกติ', normal) +
+          menuSizeGroupHtml_(name, safeName, 'mini', 'มินิ', mini) +
+        '</div>' +
+      '</div>';
+    }).join('');
+    updateMenuTotal();
+  }
+
+  function menuSizeGroupHtml_(name, safeName, size, label, qty){
+    return '<div class="menu-size-group">' +
+      '<span class="menu-size-label">' + label + '</span>' +
+      '<div class="menu-stepper">' +
+        '<button type="button" class="stepper-btn" onclick="stepMenuQty(\'' + safeName + '\', \'' + size + '\', -1)">−</button>' +
+        '<input type="number" min="0" value="' + qty + '" readonly ' +
+          'data-menu-name="' + escapeHtml(name) + '" data-menu-size="' + size + '">' +
+        '<button type="button" class="stepper-btn" onclick="stepMenuQty(\'' + safeName + '\', \'' + size + '\', 1)">+</button>' +
+      '</div>' +
+    '</div>';
+  }
+
+  function stepMenuQty(name, size, delta){
+    const input = document.querySelector(
+      '#menuItemList input[data-menu-name="' + cssEscape_(name) + '"][data-menu-size="' + size + '"]'
+    );
+    if (!input) return;
+    const next = Math.max(0, (parseFloat(input.value) || 0) + delta);
+    input.value = next;
+    sumMenuQuantitiesIntoMade();
+  }
+
+  // minimal CSS.escape fallback (data-menu-name values are plain Thai/English text, but this keeps quoting safe)
+  function cssEscape_(str){
+    return String(str).replace(/["\\]/g, '\\$&');
+  }
+
+  function getMenuQuantities(){
+    const quantities = {};
+    document.querySelectorAll('#menuItemList input[data-menu-name]').forEach(function(input){
+      const name = input.getAttribute('data-menu-name');
+      const size = input.getAttribute('data-menu-size');
+      const qty = parseFloat(input.value) || 0;
+      if (!quantities[name]) quantities[name] = { normal: 0, mini: 0 };
+      quantities[name][size] = qty;
+    });
+    // drop items where both sizes are 0
+    Object.keys(quantities).forEach(function(name){
+      if (!quantities[name].normal && !quantities[name].mini) delete quantities[name];
+    });
+    return quantities;
+  }
+
+  function sumMenuQuantitiesIntoMade(){
+    let total = 0;
+    document.querySelectorAll('#menuItemList input[data-menu-name]').forEach(function(input){
+      total += parseFloat(input.value) || 0;
+    });
+    document.getElementById('dlMade').value = total;
+    updateMenuTotal(total);
+    recalcDailyLog();
+  }
+
+  function updateMenuTotal(precomputedTotal){
+    let total = precomputedTotal;
+    if (total === undefined){
+      total = 0;
+      document.querySelectorAll('#menuItemList input[data-menu-name]').forEach(function(input){
+        total += parseFloat(input.value) || 0;
+      });
+    }
+    const value = total * 25;
+    const el = document.getElementById('menuTotalDisplay');
+    if (el) el.textContent = 'รวมทั้งหมด ' + total + ' ชิ้น (฿' + value.toLocaleString('th-TH') + ')';
+  }
+
+  function addMenuItemUI(){
+    const input = document.getElementById('menuNewName');
+    const name = input.value.trim();
+    if (!name) return;
+    const quantitiesBefore = getMenuQuantities();
+    apiPost('addMenuItem', { name: name }).then(function(items){
+      cachedMenuItems = items;
+      renderMenuItemList(quantitiesBefore);
+      input.value = '';
+    }).catch(function(err){ alert('เพิ่มเมนูไม่สำเร็จ: ' + err.message); });
+  }
+
+  function removeMenuItemUI(name){
+    if (!confirm('ลบเมนู "' + name + '" ออกจากรายการหรือไม่? (จะลบเฉพาะรายชื่อเมนู ไม่กระทบข้อมูลที่บันทึกไว้แล้ว)')) return;
+    const quantitiesBefore = getMenuQuantities();
+    delete quantitiesBefore[name];
+    apiPost('deleteMenuItem', { name: name }).then(function(items){
+      cachedMenuItems = items;
+      renderMenuItemList(quantitiesBefore);
+      sumMenuQuantitiesIntoMade();
+    }).catch(function(err){ alert('ลบเมนูไม่สำเร็จ: ' + err.message); });
+  }
+
+  function submitDailyLog(){
+    const date = document.getElementById('dlDate').value;
+    if (!date){ alert('กรุณาเลือกวันที่'); return; }
+
+    const data = {
+      date: date,
+      made: document.getElementById('dlMade').value || 0,
+      sold: document.getElementById('dlSold').value || 0,
+      remaining: document.getElementById('dlRemaining').value || 0,
+      takenAway: document.getElementById('dlTakenAway').value || 0,
+      transfer: document.getElementById('dlTransfer').value || 0,
+      cash: document.getElementById('dlCash').value || 0,
+      basketCash: document.getElementById('dlBasketCash').value || 0,
+      menuBreakdown: getMenuQuantities()
+    };
+
+    apiPost('saveDailyLog', { data: data }).then(function(){
+      cancelDailyLogEdit();
+      loadDailyLogs();
+      financeDataStale = true; // refreshes next time the รายรับ-รายจ่าย tab is opened, instead of right now
+    }).catch(onDailyLogError);
+  }
+
+  function editDailyLog(rowIndex){
+    if (!cachedDailyLogs) return;
+    const log = cachedDailyLogs.find(function(l){ return l.rowIndex === rowIndex; });
+    if (!log) return;
+
+    editingDailyLogRowIndex = rowIndex;
+    document.getElementById('dlDate').value = log.date;
+    document.getElementById('dlMade').value = log.made;
+    document.getElementById('dlSold').value = log.sold;
+    document.getElementById('dlRemaining').value = log.remaining;
+    document.getElementById('dlTakenAway').value = log.takenAway;
+    document.getElementById('dlTransfer').value = log.transfer;
+    document.getElementById('dlCash').value = log.cash;
+    document.getElementById('dlBasketCash').value = log.basketCash;
+    renderMenuItemList(log.menuBreakdown || {});
+
+    document.getElementById('dailyLogFormTitle').textContent = 'แก้ไขบันทึกประจำวัน';
+    document.getElementById('dlSubmitBtn').textContent = 'บันทึกการแก้ไข';
+    document.getElementById('dlCancelBtn').style.display = 'block';
+    openAccordion('dlFormBody');
+    document.querySelector('#dailyLogView .card').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
+  function cancelDailyLogEdit(){
+    editingDailyLogRowIndex = null;
+    document.getElementById('dlDate').value = todayStr();
+    document.getElementById('dlMade').value = '';
+    document.getElementById('dlSold').value = '';
+    document.getElementById('dlRemaining').value = '';
+    document.getElementById('dlTakenAway').value = '';
+    document.getElementById('dlTransfer').value = '';
+    document.getElementById('dlCash').value = '';
+    document.getElementById('dlBasketCash').value = '';
+    renderMenuItemList({});
+    document.getElementById('dailyLogFormTitle').textContent = 'บันทึกประจำวัน';
+    document.getElementById('dlSubmitBtn').textContent = 'บันทึก';
+    document.getElementById('dlCancelBtn').style.display = 'none';
+  }
+
+  function deleteDailyLogRow(rowIndex){
+    if (!confirm('ลบบันทึกนี้?')) return;
+    apiPost('deleteDailyLog', { rowIndex: rowIndex }).then(function(){
+      loadDailyLogs();
+      financeDataStale = true;
+    }).catch(onDailyLogError);
+  }
+
+  // ===== Accordion (inline expand/collapse, no popup) =====
+  function toggleAccordion(bodyId){
+    const body = document.getElementById(bodyId);
+    const arrow = document.getElementById(bodyId + 'Arrow');
+    const isOpen = body.style.display !== 'none';
+    body.style.display = isOpen ? 'none' : 'block';
+    if (arrow) arrow.classList.toggle('open', !isOpen);
+  }
+
+  function openAccordion(bodyId){
+    const body = document.getElementById(bodyId);
+    const arrow = document.getElementById(bodyId + 'Arrow');
+    body.style.display = 'block';
+    if (arrow) arrow.classList.add('open');
+  }
+
+  // restore whichever tab was open before the page was refreshed —
+  // load only that tab's data at startup, not both at once (firing two
+  // Apps Script requests simultaneously was causing loads to fail/drop)
   try {
-    const result = await apiPost({ endpoint: 'setActualCash', amount: amount });
-    if (result.success) {
-      loadAll();
+    const savedTab = localStorage.getItem('sanSandwichTab');
+    if (savedTab === 'dailylog') {
+      switchTab('dailylog');   // loads daily logs now
+      financeDataStale = true; // รายรับ-รายจ่าย loads only once that tab is opened
+      document.getElementById('fDate').value = todayStr(); // still init this field even though loadData() is deferred
     } else {
-      alert(result.error || 'อัปเดตไม่สำเร็จ');
+      loadData();
     }
-  } catch (err) {
-    alert('เชื่อมต่อไม่สำเร็จ: ' + err.message);
-  } finally {
-    btn.disabled = false;
-    btn.innerHTML = originalIcon;
+  } catch (e) {
+    loadData(); // fallback if localStorage isn't available for some reason
   }
-});
-
-const sheet = document.getElementById('addSheet');
-const backdrop = document.getElementById('sheetBackdrop');
-
-let selectedAction = 'ซื้อ';
-let editingTxn = null; // เก็บรายการที่กำลังแก้ไขอยู่ (null = โหมดเพิ่มรายการใหม่)
-
-function openSheet() {
-  editingTxn = null;
-  document.getElementById('sheetTitle').textContent = 'เพิ่มรายการ';
-  document.getElementById('submitBtn').textContent = 'บันทึกรายการ';
-  document.getElementById('fDate').valueAsDate = new Date();
-  document.getElementById('fStock').value = '';
-  document.getElementById('fAmount').value = '';
-  document.getElementById('fShares').value = '';
-  document.getElementById('fNote').value = '';
-  selectedAction = 'ซื้อ';
-  document.querySelectorAll('.action-btn').forEach(b => b.classList.toggle('active', b.dataset.action === 'ซื้อ'));
-  const portSel = document.getElementById('fPort');
-  if ([...portSel.options].some(o => o.value === '1 St')) portSel.value = '1 St';
-  sheet.classList.add('open');
-  backdrop.classList.add('open');
-}
-
-function openEditSheet(t) {
-  editingTxn = t;
-  document.getElementById('sheetTitle').textContent = 'แก้ไขรายการ';
-  document.getElementById('submitBtn').textContent = 'บันทึกการแก้ไข';
-
-  const portSel = document.getElementById('fPort');
-  if ([...portSel.options].some(o => o.value === t['Port'])) portSel.value = t['Port'];
-
-  selectedAction = t['action'] === 'ขาย' ? 'ขาย' : 'ซื้อ';
-  document.querySelectorAll('.action-btn').forEach(b => b.classList.toggle('active', b.dataset.action === selectedAction));
-
-  document.getElementById('fStock').value = t['รายการ'] || '';
-  document.getElementById('fAmount').value = Number(t['รวม $']) || '';
-  document.getElementById('fShares').value = Number(t['จำนวนหุ้น']) || '';
-  document.getElementById('fNote').value = t['note'] || '';
-
-  const rawDate = t['_date'] || t['Date'] || null;
-  const d = rawDate ? new Date(rawDate) : null;
-  if (d && !isNaN(d.getTime())) {
-    const pad = n => String(n).padStart(2, '0');
-    document.getElementById('fDate').value = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-  } else {
-    document.getElementById('fDate').valueAsDate = new Date();
-  }
-
-  sheet.classList.add('open');
-  backdrop.classList.add('open');
-}
-
-function closeSheet() {
-  sheet.classList.remove('open');
-  backdrop.classList.remove('open');
-  document.getElementById('formMsg').textContent = '';
-  document.getElementById('formMsg').className = 'form-msg';
-  editingTxn = null;
-}
-document.getElementById('fabAdd').onclick = openSheet;
-document.getElementById('sheetClose').onclick = closeSheet;
-backdrop.onclick = closeSheet;
-
-document.querySelector('.action-toggle').addEventListener('click', (e) => {
-  const btn = e.target.closest('.action-btn');
-  if (!btn) return;
-  document.querySelectorAll('.action-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-  selectedAction = btn.dataset.action;
-});
-
-document.getElementById('submitBtn').onclick = async () => {
-  const btn = document.getElementById('submitBtn');
-  const msg = document.getElementById('formMsg');
-  const port = document.getElementById('fPort').value;
-  const stock = document.getElementById('fStock').value.trim().toUpperCase();
-  const amount = document.getElementById('fAmount').value;
-  const shares = document.getElementById('fShares').value;
-  const date = document.getElementById('fDate').value;
-  const note = document.getElementById('fNote').value.trim();
-
-  if (!port || !stock || !amount || !shares) {
-    msg.textContent = 'กรุณากรอกข้อมูลให้ครบ';
-    msg.className = 'form-msg error';
-    return;
-  }
-
-  btn.disabled = true;
-  btn.textContent = editingTxn ? 'กำลังบันทึกการแก้ไข...' : 'กำลังบันทึก...';
-  msg.textContent = '';
-  msg.className = 'form-msg';
-
-  try {
-    const payload = editingTxn
-      ? { endpoint: 'updateTransaction', row: editingTxn['_row'], originalStock: editingTxn['รายการ'], port, txnAction: selectedAction, stock, totalAmount: amount, shares, date, note }
-      : { endpoint: 'addTransaction', port, txnAction: selectedAction, stock, totalAmount: amount, shares, date, note };
-    const result = await apiPost(payload);
-
-    if (result.success) {
-      msg.textContent = '✓ บันทึกสำเร็จ';
-      msg.className = 'form-msg success';
-      document.getElementById('fStock').value = '';
-      document.getElementById('fAmount').value = '';
-      document.getElementById('fShares').value = '';
-      document.getElementById('fNote').value = '';
-      setTimeout(() => { closeSheet(); loadAll(); }, 700);
-    } else {
-      msg.textContent = result.error || 'เกิดข้อผิดพลาด';
-      msg.className = 'form-msg error';
-    }
-  } catch (err) {
-    msg.textContent = 'เชื่อมต่อไม่สำเร็จ: ' + err.message;
-    msg.className = 'form-msg error';
-  } finally {
-    btn.disabled = false;
-    btn.textContent = 'บันทึกรายการ';
-  }
-};
-
-/* ==================== แท็บ "ค้นหาหุ้น" (Lookup) ==================== */
-
-// สลับมุมมอง พอร์ต / ค้นหาหุ้น
-document.querySelectorAll('.view-chip').forEach(chip => {
-  chip.addEventListener('click', () => {
-    document.querySelectorAll('.view-chip').forEach(c => c.classList.remove('active'));
-    chip.classList.add('active');
-    document.getElementById('portView').style.display = chip.dataset.view === 'portView' ? '' : 'none';
-    document.getElementById('lookupView').style.display = chip.dataset.view === 'lookupView' ? '' : 'none';
-  });
-});
-
-document.getElementById('lookupSearchBtn').addEventListener('click', () => runLookup());
-document.getElementById('tickerInput').addEventListener('keydown', e => { if (e.key === 'Enter') runLookup(); });
-
-// ---------- Watchlist ที่คงอยู่หน้าเดียวกัน: My Port / Watchlists ----------
-function loadWatchlist() { return JSON.parse(localStorage.getItem('lookup_watchlist') || '{}'); }
-function saveWatchlist(wl) { localStorage.setItem('lookup_watchlist', JSON.stringify(wl)); }
-
-function setMark(ticker, status, meta) {
-  const wl = loadWatchlist();
-  if (wl[ticker] && wl[ticker].status === status) {
-    delete wl[ticker];
-  } else {
-    wl[ticker] = { status, ...meta };
-  }
-  saveWatchlist(wl);
-  renderWatchlistSection();
-}
-
-function watchlistRowHtml(entry) {
-  return `<div class="watchlist-row" data-ticker="${entry.ticker}">
-    <span class="wl-ticker">${entry.ticker}</span>
-    <span class="wl-price">${fmtPrice(entry.price)}</span>
-    <span class="wl-trend ${entry.trendClass}">${entry.trendLabel}</span>
-    <button class="wl-remove" title="ลบออกจากรายการ"><i class="ti ti-x"></i></button>
-  </div>`;
-}
-
-function renderWatchlistSection() {
-  const wl = loadWatchlist();
-  const interested = Object.values(wl).filter(x => x.status === 'interested');
-  const ignored = Object.values(wl).filter(x => x.status === 'ignored');
-
-  document.getElementById('interestedList').innerHTML = interested.length
-    ? interested.map(watchlistRowHtml).join('')
-    : `<div class="watchlist-empty">ยังไม่มีหุ้นใน My Port</div>`;
-  document.getElementById('ignoredList').innerHTML = ignored.length
-    ? ignored.map(watchlistRowHtml).join('')
-    : `<div class="watchlist-empty">ยังไม่มีหุ้นใน Watchlists</div>`;
-
-  document.querySelectorAll('.watchlist-row').forEach(row => {
-    const ticker = row.dataset.ticker;
-    row.addEventListener('click', () => {
-      document.getElementById('tickerInput').value = ticker;
-      runLookup();
-    });
-    row.querySelector('.wl-remove').addEventListener('click', e => {
-      e.stopPropagation();
-      const wl2 = loadWatchlist();
-      delete wl2[ticker];
-      saveWatchlist(wl2);
-      renderWatchlistSection();
-    });
-  });
-}
-renderWatchlistSection();
-
-// ---------- ดึงข้อมูล + คำนวณ + แสดงผล ----------
-async function runLookup() {
-  const raw = document.getElementById('tickerInput').value.trim().toUpperCase();
-  const statusEl = document.getElementById('lookupStatus');
-  const holder = document.getElementById('lookupCardHolder');
-  if (!raw) return;
-  if (!API_URL) { statusEl.textContent = 'ยังไม่ได้ตั้งค่า API URL (ไปที่ตั้งค่า ⚙️ ก่อน)'; return; }
-
-  statusEl.textContent = `กำลังดึงข้อมูลรายสัปดาห์ของ ${raw} ...`;
-  holder.innerHTML = '';
-
-  try {
-    // ใช้ api() ตัวเดียวกับที่หน้าพอร์ตใช้อยู่ — เรียกผ่าน Apps Script (action=weekly_lookup)
-    const payload = await api('weekly_lookup', { ticker: raw });
-    if (payload.error) throw new Error(payload.error);
-
-    const { quote, weekly } = payload;
-    if (!Array.isArray(weekly) || weekly.length < 60) throw new Error('ข้อมูลย้อนหลังไม่พอสำหรับคำนวณ EMA/HA');
-
-    const closes = weekly.map(w => w.close);
-    const ema50  = computeEMA(closes, 50);
-    const ema100 = computeEMA(closes, 100);
-    const ema200 = computeEMA(closes, 200);
-
-    const ha = computeHeikinAshi(weekly);
-    const streaks = computeStreaks(ha);
-
-    renderLookupCard({
-      ticker: raw,
-      price: quote.close ?? quote.previousClose ?? closes.at(-1),
-      priceDate: quote.timestamp ? new Date(quote.timestamp * 1000).toISOString().slice(0,10) : weekly.at(-1).date,
-      ema50, ema100, ema200,
-      lastClose: closes.at(-1),
-      streaks,
-      weekly
-    });
-    statusEl.textContent = '';
-  } catch (err) {
-    statusEl.textContent = `เกิดข้อผิดพลาด: ${err.message}`;
-  }
-}
-
-function computeEMA(closes, period) {
-  if (closes.length < period) return null;
-  const k = 2 / (period + 1);
-  let ema = closes.slice(0, period).reduce((a,b) => a+b, 0) / period;
-  for (let i = period; i < closes.length; i++) ema = closes[i] * k + ema * (1 - k);
-  return ema;
-}
-
-function computeHeikinAshi(bars) {
-  const ha = [];
-  let prevHaOpen = null, prevHaClose = null;
-  bars.forEach((b, i) => {
-    const haClose = (b.open + b.high + b.low + b.close) / 4;
-    const haOpen = i === 0 ? (b.open + b.close) / 2 : (prevHaOpen + prevHaClose) / 2;
-    ha.push({ date: b.date, open: haOpen, close: haClose, isGreen: haClose >= haOpen });
-    prevHaOpen = haOpen; prevHaClose = haClose;
-  });
-  return ha;
-}
-
-function computeStreaks(ha) {
-  let greenStreak = 0, redStreak = 0;
-  const lastColor = ha.at(-1).isGreen;
-  for (let i = ha.length - 1; i >= 0; i--) {
-    if (ha[i].isGreen === lastColor) { lastColor ? greenStreak++ : redStreak++; }
-    else break;
-  }
-  return { green: lastColor ? greenStreak : 0, red: !lastColor ? redStreak : 0 };
-}
-
-function pct(current, base) { return ((current - base) / base) * 100; }
-function lkFmtPct(p) { return `${p >= 0 ? '+' : ''}${p.toFixed(2)}%`; }
-function fmtPrice(p) { return `$${p.toFixed(2)}`; }
-
-// กฎ WEEK TREND:
-// 1) ราคาแกว่งใกล้ EMA50 มากๆ (±5%) = จุดเปลี่ยนโมเมนตัมระยะสั้นกำลังเกิดขึ้นจริง ชนะทุกเงื่อนไขอื่น
-// 2) EMA พอ (≥2 เส้น) แต่ไม่ใกล้ EMA50: ไปทางเดียวกันหมด + extreme(≥30%ทุกเส้น) = เต็มตัว! / ไม่ extreme = ธรรมดา
-// 3) ผสม: หาว่าเส้นไหนแหวก — EMA50 แหวกเส้นเดียว = ลุ้นเปลี่ยนเทรนด์ / EMA100 หรือ EMA200 แหวก = วัดใจเข้าสู่ขาลง/ขึ้น
-// 4) EMA ไม่พอ (หุ้นใหม่) = fallback ไปใช้ HA streak แทน
-function getTrendInfo(d) {
-  const pct50  = d.ema50  != null ? pct(d.lastClose, d.ema50)  : null;
-  const pct100 = d.ema100 != null ? pct(d.lastClose, d.ema100) : null;
-  const pct200 = d.ema200 != null ? pct(d.lastClose, d.ema200) : null;
-  const pcts = [pct50, pct100, pct200].filter(p => p != null);
-
-  if (pct50 != null && Math.abs(pct50) <= 5) {
-    return { label: 'สับเปลี่ยนเทรนด์', cls: 'trend-watch' };
-  }
-
-  if (pcts.length < 2) {
-    if (d.streaks.red >= 4)   return { label: 'ขาลง', cls: 'trend-loss-plain' };
-    if (d.streaks.green >= 4) return { label: 'ขาขึ้น', cls: 'trend-gain-plain' };
-    return { label: 'ยังไม่ชัดเจน', cls: 'trend-neutral' };
-  }
-
-  const allBelow = pcts.every(p => p < 0);
-  const allAbove = pcts.every(p => p > 0);
-
-  if (allBelow) {
-    const extreme = pcts.every(p => p <= -30);
-    return extreme ? { label: 'ขาลงเต็มตัว!', cls: 'trend-loss' } : { label: 'ขาลง', cls: 'trend-loss-plain' };
-  }
-  if (allAbove) {
-    const extreme = pcts.every(p => p >= 30);
-    return extreme ? { label: 'ขาขึ้นเต็มตัว!', cls: 'trend-gain' } : { label: 'ขาขึ้น', cls: 'trend-gain-plain' };
-  }
-
-  if (pct50 != null && pct100 != null && pct200 != null) {
-    const isBelow50 = pct50 < 0, isBelow100 = pct100 < 0, isBelow200 = pct200 < 0;
-    const belowCount = [isBelow50, isBelow100, isBelow200].filter(Boolean).length;
-    const minorityIsBelow = belowCount === 1;
-    const oddOneOut = minorityIsBelow
-      ? (isBelow50 ? '50' : isBelow100 ? '100' : '200')
-      : (!isBelow50 ? '50' : !isBelow100 ? '100' : '200');
-
-    if (oddOneOut === '50') {
-      return { label: 'ลุ้นเปลี่ยนเทรนด์', cls: 'trend-watch' };
-    }
-    return { label: isBelow50 ? 'วัดใจเข้าสู่ขาลง' : 'วัดใจเข้าสู่ขาขึ้น', cls: 'trend-watch' };
-  }
-
-  const fallbackBelow = pct50 != null ? pct50 < 0 : pct100 < 0;
-  return { label: fallbackBelow ? 'วัดใจเข้าสู่ขาลง' : 'วัดใจเข้าสู่ขาขึ้น', cls: 'trend-watch' };
-}
-
-function findSupportZones(weekly) {
-  const bars = weekly.slice(-150);
-  const pivots = [];
-  for (let i = 3; i < bars.length - 3; i++) {
-    const windowVals = bars.slice(i - 3, i + 4).map(x => x.low);
-    if (bars[i].low === Math.min(...windowVals)) pivots.push(bars[i].low);
-  }
-  const zones = [];
-  pivots.sort((a, b) => a - b).forEach(p => {
-    const zone = zones.find(z => Math.abs(p - z.level) / z.level <= 0.03);
-    if (zone) { zone.level = (zone.level * zone.touches + p) / (zone.touches + 1); zone.touches++; }
-    else zones.push({ level: p, touches: 1 });
-  });
-  return zones.filter(z => z.touches >= 2);
-}
-
-function findBrokenSupport(weekly, lastClose) {
-  const zones = findSupportZones(weekly);
-  const broken = zones.filter(z => z.level > lastClose).sort((a, b) => a.level - b.level)[0];
-  if (!broken) return null;
-  const belowPct = ((broken.level - lastClose) / broken.level) * 100;
-  if (belowPct < 1) return null;
-  return { level: broken.level, belowPct, touches: broken.touches };
-}
-
-function findTestingSupport(weekly, lastClose) {
-  const zones = findSupportZones(weekly);
-  const candidates = zones
-    .map(z => ({ ...z, distPct: ((lastClose - z.level) / z.level) * 100 }))
-    .filter(z => Math.abs(z.distPct) <= 2);
-  candidates.sort((a, b) => Math.abs(a.distPct) - Math.abs(b.distPct));
-  return candidates[0] || null;
-}
-
-function computeEMASeries(closes, period) {
-  const series = new Array(closes.length).fill(null);
-  if (closes.length < period) return series;
-  const k = 2 / (period + 1);
-  let ema = closes.slice(0, period).reduce((a, b) => a + b, 0) / period;
-  series[period - 1] = ema;
-  for (let i = period; i < closes.length; i++) { ema = closes[i] * k + ema * (1 - k); series[i] = ema; }
-  return series;
-}
-
-function findEma200FirstTouch(weekly, minGapBars = 52) {
-  const closes = weekly.map(w => w.close);
-  const ema200Series = computeEMASeries(closes, 200);
-  const n = weekly.length;
-  const touchIdx = [];
-  for (let i = 0; i < n; i++) {
-    if (ema200Series[i] == null) continue;
-    if (weekly[i].low <= ema200Series[i] && ema200Series[i] <= weekly[i].high) touchIdx.push(i);
-  }
-  if (!touchIdx.length) return null;
-
-  const lastTouch = touchIdx[touchIdx.length - 1];
-  const barsAgo = n - 1 - lastTouch;
-  if (barsAgo > 5) return null;
-
-  const priorNearby = touchIdx.filter(i => i < lastTouch && lastTouch - i <= minGapBars);
-  if (priorNearby.length) return null;
-
-  const prevAny = touchIdx.filter(i => i < lastTouch);
-  const gapBars = prevAny.length ? (lastTouch - prevAny[prevAny.length - 1]) : lastTouch;
-  const beforeIdx = Math.max(0, lastTouch - 1);
-  const approachedFromAbove = closes[beforeIdx] > ema200Series[beforeIdx];
-
-  return { ema200: ema200Series[lastTouch], date: weekly[lastTouch].date, barsAgo, gapBars, approachedFromAbove };
-}
-
-function computeRSISeries(closes, period = 14) {
-  const rsi = new Array(closes.length).fill(null);
-  if (closes.length < period + 1) return rsi;
-  let gains = 0, losses = 0;
-  for (let i = 1; i <= period; i++) {
-    const change = closes[i] - closes[i - 1];
-    if (change >= 0) gains += change; else losses -= change;
-  }
-  let avgGain = gains / period, avgLoss = losses / period;
-  rsi[period] = avgLoss === 0 ? 100 : 100 - (100 / (1 + avgGain / avgLoss));
-  for (let i = period + 1; i < closes.length; i++) {
-    const change = closes[i] - closes[i - 1];
-    const gain = change > 0 ? change : 0;
-    const loss = change < 0 ? -change : 0;
-    avgGain = (avgGain * (period - 1) + gain) / period;
-    avgLoss = (avgLoss * (period - 1) + loss) / period;
-    rsi[i] = avgLoss === 0 ? 100 : 100 - (100 / (1 + avgGain / avgLoss));
-  }
-  return rsi;
-}
-
-function findPivotHighs(weekly, lookback = 3) {
-  const idxs = [];
-  for (let i = lookback; i < weekly.length - lookback; i++) {
-    const windowHighs = weekly.slice(i - lookback, i + lookback + 1).map(w => w.high);
-    if (weekly[i].high === Math.max(...windowHighs)) idxs.push(i);
-  }
-  return idxs;
-}
-
-function findRsiBearishDivergence(weekly) {
-  const closes = weekly.map(w => w.close);
-  const rsiSeries = computeRSISeries(closes, 14);
-  const pivotIdx = findPivotHighs(weekly, 3).filter(i => rsiSeries[i] != null);
-  if (pivotIdx.length < 2) return null;
-
-  const i2 = pivotIdx[pivotIdx.length - 1];
-  const i1 = pivotIdx[pivotIdx.length - 2];
-  const price1 = weekly[i1].high, price2 = weekly[i2].high;
-  const rsi1 = rsiSeries[i1], rsi2 = rsiSeries[i2];
-
-  if (!(price2 > price1 && rsi2 < rsi1)) return null;
-
-  const barsAgoSinceHigh2 = weekly.length - 1 - i2;
-  if (barsAgoSinceHigh2 > 8) return null;
-
-  const between = weekly.slice(i1, i2 + 1);
-  const swingLow = Math.min(...between.map(w => w.low));
-  const currentRsi = rsiSeries[rsiSeries.length - 1];
-  const lastClose = closes.at(-1);
-  const confirmed = lastClose < swingLow && currentRsi < 50;
-
-  return { price1, price2, rsi1, rsi2, swingLow, currentRsi, confirmed };
-}
-
-// ลำดับความสำคัญของ insight (บนสุดชนะ แสดงได้ทีละกล่อง):
-// 1) CHASE RISK  2) เพิ่งสัมผัส EMA200 ครั้งแรก  3) RSI Bearish Divergence  4) ราคาใกล้ EMA50
-// 5) จังหวะลงทุน (แดง)  6) โมเมนตัมขาขึ้น (เขียว, เกณฑ์สูงกว่า)  7) กำลังทดสอบแนวรับ  8) หลุดแนวรับ  9) ไม่มีสัญญาณ
-function determineInsight(d) {
-  if (d.ema200 != null) {
-    const ema200Pct = pct(d.lastClose, d.ema200);
-    if (ema200Pct >= 100) return { type: 'chase-risk', ema200Pct };
-  }
-
-  const touch = findEma200FirstTouch(d.weekly);
-  if (touch) return { type: 'ema200-touch', ...touch };
-
-  const divergence = findRsiBearishDivergence(d.weekly);
-  if (divergence) return { type: 'rsi-divergence', ...divergence };
-
-  if (d.ema50 != null) {
-    const pct50 = pct(d.lastClose, d.ema50);
-    if (Math.abs(pct50) <= 3) return { type: 'near-ema50', pct50 };
-  }
-
-  if (d.streaks.red >= 4) return { type: 'buy-opportunity', redStreak: d.streaks.red };
-  if (d.streaks.green >= 8) return { type: 'momentum-up', greenStreak: d.streaks.green };
-
-  const testing = findTestingSupport(d.weekly, d.lastClose);
-  if (testing) return { type: 'support-test', ...testing };
-
-  const broken = findBrokenSupport(d.weekly, d.lastClose);
-  if (broken) return { type: 'support-break', ...broken };
-
-  return { type: 'none' };
-}
-
-function renderLookupCard(d) {
-  const emaRows = [
-    { label: 'EMA 50',  val: d.ema50  },
-    { label: 'EMA 100', val: d.ema100 },
-    { label: 'EMA 200', val: d.ema200 },
-  ];
-
-  const redStreak = d.streaks.red, greenStreak = d.streaks.green;
-  const trend = getTrendInfo(d);
-  const trendLabel = trend.label, trendClass = trend.cls;
-
-  const insight = determineInsight(d);
-  let insightHtml = '';
-  let showNoSignal = true;
-
-  if (insight.type === 'chase-risk') {
-    insightHtml = `
-      <div class="lookup-insight-box chase-risk">
-        <div class="ieyebrow">CHASE RISK • เตือนความเสี่ยง</div>
-        <div class="istat">เหนือ Week EMA 200<br>${lkFmtPct(insight.ema200Pct)}</div>
-        <div class="ititle" style="margin-top:8px;">ห้ามไล่ราคา</div>
-        <div class="itext">ราคาห่างจาก Week EMA 200 มากแล้ว นักลงทุนที่ยังไม่ได้ซื้อมาก่อน รอราคาย่อก่อน</div>
-      </div>`;
-  } else if (insight.type === 'ema200-touch') {
-    insightHtml = `
-      <div class="lookup-insight-box ema200-touch">
-        <div class="ititle">เพิ่งสัมผัส EMA200 ครั้งแรก</div>
-        <div class="itext">
-          ไม่แตะเส้นนี้มาอย่างน้อย ${insight.gapBars} แท่ง<br>
-          ${insight.approachedFromAbove ? 'ลงมาจากด้านบน และปิดหลุดลงมา' : 'ขึ้นมาจากด้านล่าง และปิดทะลุขึ้นไป'}<br>
-          EMA200 ${fmtPrice(insight.ema200)} • เกิดเมื่อ ${insight.date} (${insight.barsAgo} แท่งก่อน)
-        </div>
-      </div>`;
-    showNoSignal = false;
-  } else if (insight.type === 'rsi-divergence') {
-    insightHtml = `
-      <div class="lookup-insight-box rsi-div">
-        <div class="ititle">RSI Bearish Divergence</div>
-        <div class="itext">
-          เฝ้าระวังกลับลง<br>
-          ราคาทำ High สูงขึ้น ${fmtPrice(insight.price1)} → ${fmtPrice(insight.price2)}<br>
-          แต่ RSI 14 ลด High ${insight.rsi1.toFixed(1)} → ${insight.rsi2.toFixed(1)}<br>
-          ${insight.confirmed
-            ? 'Swing ยืนยันแล้ว • สัญญาณกลับตัวยืนยันสมบูรณ์'
-            : `Swing ยืนยันแล้ว • รอราคาปิดต่ำกว่า ${fmtPrice(insight.swingLow)} และ RSI ต่ำกว่า 50`}
-        </div>
-      </div>`;
-    showNoSignal = false;
-  } else if (insight.type === 'near-ema50') {
-    insightHtml = `<div class="lookup-info-line">ราคาใกล้ EMA 50</div>`;
-    showNoSignal = false;
-  } else if (insight.type === 'buy-opportunity') {
-    insightHtml = `
-      <div class="lookup-insight-box">
-        <div class="ititle"><i class="ti ti-bulb"></i> จังหวะลงทุนเริ่มน่าสนใจ</div>
-        <div class="itext">HA แดงต่อเนื่อง ${insight.redStreak} แท่งแล้ว • เริ่มเฝ้าระวัง High-Wave/Doji หรือแท่งเปลี่ยนสี</div>
-      </div>`;
-  } else if (insight.type === 'momentum-up') {
-    insightHtml = `
-      <div class="lookup-insight-box">
-        <div class="ititle"><i class="ti ti-bulb"></i> โมเมนตัมขาขึ้นแข็งแรง</div>
-        <div class="itext">HA เขียวต่อเนื่อง ${insight.greenStreak} แท่งแล้ว • ระวังแรงขายทำกำไรระยะสั้น</div>
-      </div>`;
-  } else if (insight.type === 'support-test') {
-    insightHtml = `
-      <div class="lookup-insight-box support-test">
-        <div class="ititle">กำลังทดสอบแนวรับสำคัญ</div>
-        <div class="itext">กำลังต้านแรงรับบริเวณ ${fmtPrice(insight.level)}<br>เคยเกิดปฏิกิริยาบริเวณนี้ ${insight.touches} ครั้ง</div>
-      </div>`;
-    showNoSignal = false;
-  } else if (insight.type === 'support-break') {
-    insightHtml = `
-      <div class="lookup-insight-box support-break">
-        <div class="ititle">หลุดแนวรับสำคัญ</div>
-        <div class="itext">ปิดต่ำกว่าโซน ${fmtPrice(insight.level)} ${insight.belowPct.toFixed(1)}%<br>เคยเกิดปฏิกิริยาที่แนวนี้ ${insight.touches} ครั้ง</div>
-      </div>`;
-    showNoSignal = false;
-  }
-
-  const noSignalHtml = showNoSignal ? `<div class="lookup-no-signal">ยังไม่พบสัญญาณสำคัญใน Timeframe นี้</div>` : '';
-
-  const wl = loadWatchlist();
-  const currentStatus = wl[d.ticker]?.status || null;
-
-  document.getElementById('lookupCardHolder').innerHTML = `
-    <div class="lookup-card">
-      <div class="lookup-card-head">
-        <div>
-          <div class="lookup-eyebrow">Live Lookup</div>
-          <div class="lookup-ticker-row">
-            <img class="lookup-ticker-logo" src="https://eodhd.com/img/logos/US/${d.ticker}.png"
-                 onerror="this.style.display='none'" alt="${d.ticker}">
-            <div class="lookup-ticker-name">${d.ticker}</div>
-          </div>
-          <div class="lookup-price-line">${fmtPrice(d.price)} • ราคา ${d.priceDate}</div>
-        </div>
-        <div class="trend-badge ${trendClass}">
-          <div class="tlabel">WEEK TREND</div>
-          <div class="tvalue">${trendLabel}</div>
-        </div>
-      </div>
-
-      <div class="lookup-ema-grid">
-        ${emaRows.map(r => {
-          if (r.val == null) return `<div class="lookup-ema-box"><div class="elabel">${r.label}</div><div class="eprice">ไม่มีข้อมูลพอ</div></div>`;
-          const p = pct(d.lastClose, r.val);
-          return `<div class="lookup-ema-box">
-            <div class="elabel">${r.label}</div>
-            <div class="epct ${p>=0?'lookup-up':'lookup-down'}">${lkFmtPct(p)}</div>
-            <div class="eprice">${fmtPrice(r.val)}</div>
-          </div>`;
-        }).join('')}
-      </div>
-
-      <div class="lookup-ha-row">
-        <div class="lookup-ha-pill ${greenStreak>0?'active-green':''}">HA เขียวต่อเนื่อง ${greenStreak}</div>
-        <div class="lookup-ha-pill ${redStreak>0?'active-red':''}">HA แดงต่อเนื่อง ${redStreak}</div>
-      </div>
-
-      ${insightHtml}
-      ${noSignalHtml}
-
-      <div class="lookup-mark-row">
-        <button class="lookup-mark-btn interested ${currentStatus==='interested'?'active':''}" id="markInterestedBtn">
-          <i class="ti ti-star"></i> เพิ่มเข้าพอร์ต
-        </button>
-        <button class="lookup-mark-btn ignored ${currentStatus==='ignored'?'active':''}" id="markIgnoredBtn">
-          <i class="ti ti-lock"></i> เพิ่มใน Watchlist
-        </button>
-      </div>
-    </div>`;
-
-  const marks = { ticker: d.ticker, price: d.price, priceDate: d.priceDate, trendLabel, trendClass };
-  document.getElementById('markInterestedBtn').addEventListener('click', () => {
-    setMark(d.ticker, 'interested', marks);
-    renderLookupCard(d);
-  });
-  document.getElementById('markIgnoredBtn').addEventListener('click', () => {
-    setMark(d.ticker, 'ignored', marks);
-    renderLookupCard(d);
-  });
-}
-
-updateThemeIcon();
-renderFromSnapshot(); // แสดงข้อมูลล่าสุดที่แคชไว้ทันที ไม่ต้องรอ network ก่อน
-loadAll();
 </script>
 </body>
 </html>
