@@ -528,7 +528,16 @@
   let jsonpCounter_ = 0;
 
   // Core request function — every API call (read or write) goes through this.
-  function apiGet(action, extraParams){
+  // Retries automatically (up to 3 attempts total) since Apps Script can be
+  // slow to "wake up" after being idle, which was causing frequent
+  // connection failures that a simple retry usually resolves on its own.
+  // Also has its own timeout, since a truly stuck request may never fire
+  // the browser's onerror event at all.
+  function apiGet(action, extraParams, attempt){
+    attempt = attempt || 1;
+    const MAX_ATTEMPTS = 3;
+    const TIMEOUT_MS = 12000;
+
     return new Promise(function(resolve, reject){
       const callbackName = 'apiJsonpCallback_' + (jsonpCounter_++) + '_' + Date.now();
       const params = Object.assign({ action: action, token: API_TOKEN, callback: callbackName }, extraParams || {});
@@ -538,13 +547,29 @@
 
       const script = document.createElement('script');
       let settled = false;
+      let timeoutId;
 
       function cleanup(){
         delete window[callbackName];
         if (script.parentNode) script.parentNode.removeChild(script);
+        clearTimeout(timeoutId);
+      }
+
+      function retryOrFail(errMsg){
+        if (settled) return;
+        settled = true;
+        cleanup();
+        if (attempt < MAX_ATTEMPTS){
+          setTimeout(function(){
+            apiGet(action, extraParams, attempt + 1).then(resolve).catch(reject);
+          }, 700 * attempt); // wait a bit longer before each retry
+        } else {
+          reject(new Error(errMsg));
+        }
       }
 
       window[callbackName] = function(json){
+        if (settled) return;
         settled = true;
         cleanup();
         if (!json.success) reject(new Error(json.error || 'เกิดข้อผิดพลาด'));
@@ -552,10 +577,12 @@
       };
 
       script.onerror = function(){
-        if (settled) return;
-        cleanup();
-        reject(new Error('เชื่อมต่อ API ไม่สำเร็จ (เช็ค API_BASE_URL ว่าใส่ถูกไหม)'));
+        retryOrFail('เชื่อมต่อ API ไม่สำเร็จ (เช็ค API_BASE_URL ว่าใส่ถูกไหม)');
       };
+
+      timeoutId = setTimeout(function(){
+        retryOrFail('เชื่อมต่อ API หมดเวลา');
+      }, TIMEOUT_MS);
 
       script.src = API_BASE_URL + '?' + qs;
       document.body.appendChild(script);
