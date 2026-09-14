@@ -111,6 +111,28 @@
   .toggle button.active.expense{ background:var(--tomato); color:#fff; }
   .toggle button.active.neutral{ background:var(--crust-dark); color:#fff; }
 
+  .refresh-btn{
+    flex-shrink:0;
+    width:40px;
+    height:40px;
+    border:none;
+    border-radius:10px;
+    background:var(--cream);
+    color:var(--crust-dark);
+    font-size:1.3rem;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .refresh-btn:active{ background:var(--line); }
+  .refresh-btn.spinning{ animation:spin 0.8s linear infinite; }
+  @keyframes spin{
+    from{ transform:rotate(0deg); }
+    to{ transform:rotate(360deg); }
+  }
+
   label{
     display:block;
     font-size:0.78rem;
@@ -378,9 +400,12 @@
   </header>
 
   <div class="wrap">
-    <div class="toggle" style="margin-top:14px;">
-      <button type="button" class="active neutral" id="tabFinance" onclick="switchTab('finance')">รายรับ-รายจ่าย</button>
-      <button type="button" id="tabDailyLog" onclick="switchTab('dailylog')">บันทึกประจำวัน</button>
+    <div style="display:flex; align-items:center; gap:8px; margin-top:14px;">
+      <div class="toggle" style="flex:1; margin-top:0;">
+        <button type="button" class="active neutral" id="tabFinance" onclick="switchTab('finance')">รายรับ-รายจ่าย</button>
+        <button type="button" id="tabDailyLog" onclick="switchTab('dailylog')">บันทึกประจำวัน</button>
+      </div>
+      <button type="button" id="refreshBtn" class="refresh-btn" onclick="refreshCurrentTab()" title="รีเฟรชข้อมูล">⟳</button>
     </div>
 
     <div id="financeView">
@@ -674,9 +699,9 @@
     });
   }
 
-  function loadData(){
+  function loadData(force){
     document.getElementById('fDate').value = todayStr();
-    apiGet('getAllData').then(renderAll).catch(onError);
+    apiGet('getAllData', force ? { force: '1' } : {}).then(renderAll).catch(onError);
   }
 
   function onError(err){
@@ -995,10 +1020,32 @@
     try { localStorage.setItem('sanSandwichTab', tab); } catch (e) {}
   }
 
+  function refreshCurrentTab(){
+    const btn = document.getElementById('refreshBtn');
+    btn.classList.add('spinning');
+    btn.disabled = true;
+
+    const done = function(){
+      btn.classList.remove('spinning');
+      btn.disabled = false;
+    };
+
+    if (currentTab === 'dailylog'){
+      loadDailyLogs(true);
+      financeDataStale = true; // finance data may be out of date too (ขายได้ sync), refresh it next time that tab opens
+    } else {
+      loadData(true);
+    }
+    // loadData()/loadDailyLogs() don't return promises (they render as each
+    // piece arrives), so just give the spin a moment to be visible rather
+    // than tracking exact completion.
+    setTimeout(done, 900);
+  }
+
   // ===== Daily log (บันทึกประจำวัน) =====
-  function loadDailyLogs(){
+  function loadDailyLogs(force){
     document.getElementById('dlDate').value = todayStr();
-    apiGet('getDailyLogs').then(function(logs){
+    apiGet('getDailyLogs', force ? { force: '1' } : {}).then(function(logs){
       renderDailyLogs(logs);
       return loadMenuItems(); // sequenced after, not fired at the same time
     }).catch(onDailyLogError);
