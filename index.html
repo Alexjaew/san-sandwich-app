@@ -900,6 +900,7 @@
       apiPost('updateTransaction', { rowIndex: editingRowIndex, data: data }).then(function(){
         cancelEdit();
         loadData();
+        backToMainAfterSave('addTxBody');
       }).catch(onError);
     } else {
       apiPost('addTransaction', { data: data }).then(function(){
@@ -908,6 +909,7 @@
         document.getElementById('fAmount').value = '';
         clearPendingReceipt();
         loadData();
+        backToMainAfterSave('addTxBody');
       }).catch(onError);
     }
   }
@@ -1309,6 +1311,7 @@
       cancelDailyLogEdit();
       loadDailyLogs();
       financeDataStale = true; // refreshes next time the รายรับ-รายจ่าย tab is opened, instead of right now
+      backToMainAfterSave('dlFormBody');
     }).catch(onDailyLogError);
   }
 
@@ -1373,6 +1376,21 @@
     const arrow = document.getElementById(bodyId + 'Arrow');
     body.style.display = 'block';
     if (arrow) arrow.classList.add('open');
+  }
+
+  function closeAccordion(bodyId){
+    const body = document.getElementById(bodyId);
+    const arrow = document.getElementById(bodyId + 'Arrow');
+    body.style.display = 'none';
+    if (arrow) arrow.classList.remove('open');
+  }
+
+  // collapses the given form back and scrolls to the top of the page, so
+  // it's visually obvious a save completed rather than leaving the form
+  // sitting open with no clear confirmation
+  function backToMainAfterSave(bodyId){
+    closeAccordion(bodyId);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   // restore whichever tab was open before the page was refreshed —
