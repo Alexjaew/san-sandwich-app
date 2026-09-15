@@ -560,8 +560,8 @@
   // the browser's onerror event at all.
   function apiGet(action, extraParams, attempt){
     attempt = attempt || 1;
-    const MAX_ATTEMPTS = 3;
-    const TIMEOUT_MS = 12000;
+    const MAX_ATTEMPTS = 2;   // was 3 — fewer retries means less risk of piling up concurrent server-side executions
+    const TIMEOUT_MS = 25000; // was 12000 — Apps Script cold starts can legitimately take this long; a shorter timeout was retrying (and stacking load) on requests that would have succeeded on their own
 
     return new Promise(function(resolve, reject){
       const callbackName = 'apiJsonpCallback_' + (jsonpCounter_++) + '_' + Date.now();
@@ -587,7 +587,7 @@
         if (attempt < MAX_ATTEMPTS){
           setTimeout(function(){
             apiGet(action, extraParams, attempt + 1).then(resolve).catch(reject);
-          }, 700 * attempt); // wait a bit longer before each retry
+          }, 1500); // give the original (possibly still-running) request time to clear before trying again
         } else {
           reject(new Error(errMsg));
         }
